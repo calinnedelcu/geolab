@@ -149,7 +149,7 @@ export async function buildReliefPage(cfg) {
     function startQuiz(mode = 'find', only = null) {
       if (state.tool) toggleTool(null);
       const pool = only ? only.slice() : shuffle(cfg.units.map((u) => u.id));
-      state.quiz = { mode, queue: only ? pool.slice() : pool.slice(0, Math.min(10, pool.length)), idx: 0, ok: 0, bad: 0, locked: false };
+      state.quiz = { mode, queue: only ? pool.slice() : pool.slice(0, Math.min(30, pool.length)), idx: 0, ok: 0, bad: 0, locked: false };
       select(0); rm.setFilter(null); applyFilter(); rm.noHover = true; rm.setLabelsVisible('unit', false); rm.hideTip(); showDock(true); nextQ();
     }
     function endQuiz(msg) {
