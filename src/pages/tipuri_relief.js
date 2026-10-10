@@ -30,6 +30,7 @@ function sceneGlacial(infoSet) {
   const wrap = h('div'); let mode = 'montan';
   const draw = () => {
     clear(wrap); if (mode === 'calota') { wrap.append(PHOTO('01', 'Calotă glaciară, fiord și lac glaciar')); infoSet('Calotă glaciară · fiord · lac glaciar', 'Calota: gheață care acoperă o suprafață întinsă (Groenlanda, Antarctica). Fiordul: vale glaciară inundată de mare (Norvegia). Lacul glaciar: apă într-o depresiune creată de ghețari.'); return; }
+    if (mode === 'montan') { wrap.append(PHOTO('00', 'Glaciar montan: circ, ghețar, vale glaciară, lac')); infoSet('Glaciar montan', 'Circ glaciar → ghețar → vale glaciară cu profil în U → lac glaciar. Apasă pe imagine ca s-o mărești.'); return; }
     const s = S('svg', { viewBox: '0 0 900 380', class: 'sc' }); wrap.append(s);
     if (mode === 'montan') {
       s.append(S('path', { d: 'M0,380 L0,250 L140,130 L230,200 L330,70 L450,210 L560,60 L700,190 L820,110 L900,200 L900,380Z', fill: '#4a5d73' }),
@@ -75,7 +76,7 @@ export default async function tipuri() {
   let cur = null; const body = h('div'); const info = h('div', { class: 'card', style: { minHeight: '84px' } });
   const infoSet = (t, d) => { clear(info); info.append(h('h3', { style: { marginBottom: '4px' } }, t), h('p', { style: { margin: 0, color: 'var(--muted)' } }, d || 'Apasă pe imagine ca s-o mărești.')); };
   const show = (id) => { cur && cur.destroy && cur.destroy(); const t = RELIEF_TYPES.find((x) => x.id === id); clear(body); const sc = SCENES[t.scene](infoSet); cur = sc;
-    infoSet(t.name, 'Apasă pe imagine ca s-o mărești (la glaciarul montan, apasă pe punctele galbene).');
+    infoSet(t.name, 'Apasă pe imagine ca s-o mărești .');
     body.append(h('div', { class: 'grid', style: { gridTemplateColumns: 'minmax(0,1.7fr) minmax(0,1fr)', alignItems: 'start' } }, h('div', null, sc.el, h('div', { style: { marginTop: '12px' } }, info)),
       h('div', { class: 'card' }, h('div', { class: 'row', style: { gap: '10px', marginBottom: '8px' } }, h('span', { style: { width: '26px', color: t.color }, html: '' }, ic(t.icon)), h('h3', { style: { margin: 0 } }, t.name)), h('div', { class: 'hint', style: { fontWeight: 800, textTransform: 'uppercase', letterSpacing: '.08em', fontSize: '.7rem' } }, 'Din caiete'), h('ul', { style: { margin: '6px 0 0', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '8px' } }, t.caiet.map(([x, s]) => h('li', null, x, ' ', srcTag(s)))), t.ex ? h('div', { class: 'callout', style: { marginTop: '14px' } }, ic('info'), h('div', null, t.ex, ' ', t.exSrc ? srcTag(t.exSrc) : null)) : null))); };
   el.append(h('div', { class: 'row', style: { marginBottom: '14px' } }, tabs(RELIEF_TYPES.map((t) => ({ id: t.id, label: t.name })), 'glaciar', show)), body);
