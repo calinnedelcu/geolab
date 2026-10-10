@@ -179,7 +179,7 @@ export async function buildReliefPage(cfg) {
       setTimeout(() => { if (state.quiz === q) { q.idx++; nextQ(); } }, ok ? 650 : 1400);
     }
     function quizClick(hitId) {
-      const q = state.quiz; if (!q || q.locked || q.mode !== 'find') return; const id = q.queue[q.idx]; if (!hitId) return; // click în afara unităților = ca și cum nu ai apăsat const ok = hitId === id; q.locked = true;
+      const q = state.quiz; if (!q || q.locked || q.mode !== 'find') return; const id = q.queue[q.idx]; if (!hitId) return; /* click în afara unităților = ca și cum nu ai apăsat */ const ok = hitId === id; q.locked = true;
       store.recordAnswer('relief-' + cfg.key, ok); ok ? (q.ok++, beep('ok')) : (q.bad++, beep('bad')); rm.setSelected(id);
       if (ok) { store.addXP(3); confetti(window.innerWidth * 0.5, window.innerHeight * 0.4, 18); } else toast({ icon: 'alert', title: hitId ? `Aceea e: ${unitById[hitId]?.name || '—'}` : 'Nu e o unitate', text: `Răspunsul corect: ${unitById[id].name}` });
       clear(quizPanel); quizPanel.append(h('div', { class: 'row' }, h('span', { class: `badge ${ok ? 'ok' : 'bad'}` }, ok ? 'Corect!' : 'Greșit'), h('b', null, unitById[id].name)));
