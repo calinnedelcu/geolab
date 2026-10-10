@@ -146,10 +146,12 @@ export async function buildReliefPage(cfg) {
     dock.append(quizPanel, toolPanel);
     const showDock = (on) => { dock.style.display = on ? 'block' : 'none'; setTimeout(() => rm.invalidate(), 30); };
 
+    // 30 de întrebări: dacă sunt mai puține unități, se repetă runde amestecate (fără aceeași unitate de două ori la rând)
+    function fill30(ids) { let out = []; while (out.length < 30) { let r = shuffle(ids.slice()); if (out.length && r[0] === out[out.length - 1] && r.length > 1) r.push(r.shift()); out = out.concat(r); } return out.slice(0, 30); }
     function startQuiz(mode = 'find', only = null) {
       if (state.tool) toggleTool(null);
       const pool = only ? only.slice() : shuffle(cfg.units.map((u) => u.id));
-      state.quiz = { mode, queue: only ? pool.slice() : pool.slice(0, Math.min(30, pool.length)), idx: 0, ok: 0, bad: 0, locked: false };
+      state.quiz = { mode, queue: only ? pool.slice() : fill30(cfg.units.map((u) => u.id)), idx: 0, ok: 0, bad: 0, locked: false };
       select(0); rm.setFilter(null); applyFilter(); rm.noHover = true; rm.setLabelsVisible('unit', false); rm.hideTip(); showDock(true); nextQ();
     }
     function endQuiz(msg) {
