@@ -92,3 +92,9 @@ div.leaflet-container { font: inherit; background: var(--sea); outline: 0; -webk
   body.nav-collapsed .brand > div:not(.brand-logo), body.nav-collapsed .nav-title, body.nav-collapsed .sidebar-foot, body.nav-collapsed .nav a .tag, body.nav-collapsed .nav a span.nl { display: revert; }
   body.nav-collapsed .nav a { justify-content: flex-start; padding: 9px 12px; }
 }
+
+/* test cu vârfuri: puncte apăsabile */
+.lbl.peakdot { width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; background: #ff9f43; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,.55); }
+.lf-lbl.leaflet-interactive .lbl.peakdot { cursor: pointer; }
+.lf-lbl.leaflet-interactive .lbl.peakdot:hover { background: #ffd37a; scale: 1.2; }
+.lbl.peakdot.ans { background: #4ade80; }

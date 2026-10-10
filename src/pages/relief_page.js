@@ -138,7 +138,8 @@ export async function buildReliefPage(cfg) {
       const u = e.id ? unitById[e.id] : null; if (!u) { rm.hideTip(); return; }
       rm.showTip(e.sx + 14, e.sy + 14, `<div>${u.name}</div><small>${u.alt ? `max. ${u.alt.v < 0 ? '−' : ''}${fmt(Math.abs(u.alt.v))} m · ` : ''}${e.h > 0 ? `aici ≈ ${fmt(Math.round(e.h))} m` : ''}</small>`);
     });
-    rm.on('select', (e) => { if (state.quiz && state.quiz.mode === 'find') return quizClick(e.id); if (state.tool) return; select(e.id); });
+    let pq = null;
+    rm.on('select', (e) => { if (state.quiz && state.quiz.mode === 'find') return quizClick(e.id); if (state.tool || pq) return; select(e.id); });
     rm.on('click', (e) => { if (state.quiz && state.quiz.mode === 'find' && !e.id) return quizClick(0); if (state.tool === 'profile') profileClick(e); });
 
     // ------------- dock (test / profil)
@@ -149,7 +150,7 @@ export async function buildReliefPage(cfg) {
     // 30 de întrebări: dacă sunt mai puține unități, se repetă runde amestecate (fără aceeași unitate de două ori la rând)
     function fill30(ids) { let out = []; while (out.length < 30) { let r = shuffle(ids.slice()); if (out.length && r[0] === out[out.length - 1] && r.length > 1) r.push(r.shift()); out = out.concat(r); } return out.slice(0, 30); }
     function startQuiz(mode = 'find', only = null) {
-      if (state.tool) toggleTool(null);
+      if (state.tool) toggleTool(null); if (pq) endPQ(false);
       const pool = only ? only.slice() : shuffle(cfg.units.map((u) => u.id));
       state.quiz = { mode, queue: only ? pool.slice() : fill30(cfg.units.map((u) => u.id)), idx: 0, ok: 0, bad: 0, locked: false };
       select(0); rm.setFilter(null); applyFilter(); rm.noHover = true; rm.setLabelsVisible('unit', false); rm.hideTip(); showDock(true); nextQ();
@@ -174,6 +175,52 @@ export async function buildReliefPage(cfg) {
         const others = shuffle(cfg.units.filter((x) => x.id !== id)).slice(0, 3); const opts = shuffle([u, ...others]);
         quizPanel.append(head, h('h3', { style: { margin: '0 0 8px' } }, 'Cum se numește unitatea evidențiată?'), h('div', { class: 'grid c2', style: { gap: '8px' } }, opts.map((o) => h('button', { class: 'btn opt', onclick: (e) => answer(o.id === id, e.currentTarget, id) }, o.name))));
       }
+    }
+
+    // ------------- teste cu vârfuri: vârf → înălțime / înălțime → vârf pe hartă / vârf → pe hartă
+    const PK = (cfg.peaks || []).filter((p) => p.alt > 0);
+    function peakAltOpts(p) {
+      const near = new Set(); [0.9, 0.8, 1.12, 1.25, 0.7, 1.4].forEach((f) => { const v = Math.round((p.alt * f) / 10) * 10 + (p.alt % 10 ? 4 : 0); if (v !== p.alt && v > 0) near.add(v); }); PK.forEach((x) => { if (x !== p && Math.abs(x.alt - p.alt) < p.alt * 0.45) near.add(x.alt); });
+      return shuffle([p.alt, ...shuffle([...near]).slice(0, 3)]);
+    }
+    function startPeakQuiz(mode) {
+      if (!PK.length) return; if (state.tool) toggleTool(null); if (state.quiz) endQuiz(false); if (pq) endPQ(false);
+      pq = { mode, queue: fill30(PK.map((_, i) => i)), i: 0, ok: 0, bad: 0, locked: false };
+      select(0); rm.setFilter(null); applyFilter(); rm.noHover = true; rm.setLabelsVisible('unit', false); rm.setLabelsVisible('peak', false); rm.hideTip();
+      if (mode !== 'alt') { rm.resetView(); PK.forEach((p, i) => rm.addLabel({ lon: p.lon, lat: p.lat, html: '', cls: 'peakdot', group: 'pdot', onClick: () => peakClick(i), z: 500 })); }
+      showDock(true); nextPQ();
+    }
+    function endPQ(done) {
+      const q = pq; pq = null; rm.clearLabels('pdot'); rm.noHover = false; rm.setSelected(0); rm.setLabelsVisible('unit', true); rm.setLabelsVisible('peak', true); applyFilter();
+      if (q && done) {
+        clear(quizPanel); const pct = Math.round((q.ok / Math.max(1, q.ok + q.bad)) * 100);
+        quizPanel.append(h('div', { class: 'row' }, h('h3', { style: { margin: 0 } }, `Rezultat: ${q.ok}/${q.ok + q.bad} (${pct}%)`), h('div', { class: 'sp' }), h('button', { class: 'btn small primary', onclick: () => startPeakQuiz(q.mode) }, ic('rotate'), 'Din nou'), h('button', { class: 'btn small', onclick: () => showDock(false) }, 'Închide')));
+        if (pct >= 80) confetti(); store.addXP(Math.round(q.ok * 2), 'Test vârfuri terminat'); store.checkBadges();
+      } else showDock(false);
+    }
+    function nextPQ() {
+      const q = pq; if (!q) return; if (q.i >= q.queue.length) return endPQ(true);
+      q.locked = false; const p = PK[q.queue[q.i]]; clear(quizPanel); rm.clearLabels('pdot-ans');
+      const head = h('div', { class: 'row', style: { gap: '10px', flexWrap: 'nowrap', marginBottom: '8px' } }, h('span', { class: 'badge mint' }, `${q.i + 1}/${q.queue.length}`), h('span', { class: 'badge ok' }, `✓ ${q.ok}`), h('span', { class: 'badge bad' }, `✗ ${q.bad}`), h('div', { class: 'sp' }), h('button', { class: 'btn small ghost', onclick: () => endPQ(false) }, ic('x'), 'Oprește'));
+      const skip = h('button', { class: 'btn small ghost', onclick: () => { if (q.locked) return; q.bad++; q.i++; nextPQ(); } }, 'Sari peste');
+      if (q.mode === 'alt') {
+        rm.map.flyTo([p.lat, p.lon], rm._homeZoom + 1.3, { duration: 0.7 }); rm.addLabel({ lon: p.lon, lat: p.lat, html: '', cls: 'peakdot ans', group: 'pdot-ans' });
+        quizPanel.append(head, h('h3', { style: { margin: '0 0 8px' } }, 'Ce înălțime are vârful ', h('span', { class: 'gradient-text' }, p.name), '?'), h('div', { class: 'grid c2', style: { gap: '8px' } }, peakAltOpts(p).map((v) => h('button', { class: 'btn opt', 'data-v': v, onclick: (e) => peakAnswer(v === p.alt, e.currentTarget) }, `${fmt(v)} m`))));
+      } else {
+        const ask = q.mode === 'name' ? ['Apasă pe vârful de ', h('span', { class: 'gradient-text' }, `${fmt(p.alt)} m`)] : ['Unde se află vârful ', h('span', { class: 'gradient-text' }, p.name), '?'];
+        quizPanel.append(head, h('h3', { style: { margin: '0 0 4px' } }, ...ask), h('div', { class: 'hint' }, 'Apasă pe punctul potrivit de pe hartă (apăsările în afara punctelor nu contează).'), h('div', { class: 'row', style: { marginTop: '8px' } }, skip));
+      }
+    }
+    function peakAnswer(ok, btn) {
+      const q = pq; if (!q || q.locked) return; q.locked = true; const p = PK[q.queue[q.i]]; store.recordAnswer('relief-' + cfg.key, ok); ok ? (q.ok++, beep('ok'), store.addXP(3)) : (q.bad++, beep('bad'));
+      if (btn) { btn.classList.add(ok ? 'good' : 'bad'); if (!ok) [...quizPanel.querySelectorAll('button.opt')].find((b) => +b.dataset.v === p.alt)?.classList.add('good'); }
+      setTimeout(() => { if (pq === q) { q.i++; nextPQ(); } }, ok ? 650 : 1500);
+    }
+    function peakClick(i) {
+      const q = pq; if (!q || q.locked || q.mode === 'alt') return; const p = PK[q.queue[q.i]]; const ok = i === q.queue[q.i];
+      if (!ok) toast({ icon: 'alert', title: `Aceea e: ${PK[i].name} (${fmt(PK[i].alt)} m)`, text: `Corect: ${p.name} (${fmt(p.alt)} m)` });
+      rm.addLabel({ lon: p.lon, lat: p.lat, html: `<span>${p.name}</span><i>${fmt(p.alt)} m</i>`, cls: 'peak', group: 'pdot-ans' });
+      peakAnswer(ok, null);
     }
     function answer(ok, btn, id) {
       const q = state.quiz; if (!q || q.locked) return; q.locked = true; store.recordAnswer('relief-' + cfg.key, ok); ok ? (q.ok++, beep('ok')) : (q.bad++, beep('bad'));
@@ -226,7 +273,7 @@ export async function buildReliefPage(cfg) {
       clear(profileSVG); profileSVG.append(s, readout);
     }
     const toolBtns = []; (cfg.tools || []).forEach((t) => { if (t === 'profile') { const b = h('button', { class: 'btn small', onclick: () => toggleTool('profile') }, ic('cut'), 'Profil topografic'); b.dataset.tool = 'profile'; toolBtns.push(b); } });
-    layerPanel.append(h('div', { class: 'divider' }), h('h4', null, 'Exersează'), h('div', { class: 'row', style: { gap: '8px' } }, h('button', { class: 'btn small primary', onclick: () => startQuiz('find') }, ic('target'), 'Test pe hartă'), h('button', { class: 'btn small', onclick: () => startQuiz('name') }, ic('help'), 'Recunoaște unitatea'), ...toolBtns));
+    layerPanel.append(h('div', { class: 'divider' }), h('h4', null, 'Exersează'), h('div', { class: 'row', style: { gap: '8px' } }, h('button', { class: 'btn small primary', onclick: () => startQuiz('find') }, ic('target'), 'Test pe hartă'), h('button', { class: 'btn small', onclick: () => startQuiz('name') }, ic('help'), 'Recunoaște unitatea'), ...toolBtns), ...(cfg.peaks && cfg.peaks.length ? [h('h4', { style: { marginTop: '14px' } }, 'Doar vârfuri'), h('div', { class: 'stack', style: { gap: '8px' } }, h('button', { class: 'btn small', style: { justifyContent: 'flex-start' }, onclick: () => startPeakQuiz('alt') }, ic('mountain'), 'Vârf → alege înălțimea'), h('button', { class: 'btn small', style: { justifyContent: 'flex-start' }, onclick: () => startPeakQuiz('name') }, ic('target'), 'Înălțime → apasă vârful'), h('button', { class: 'btn small', style: { justifyContent: 'flex-start' }, onclick: () => startPeakQuiz('where') }, ic('pin'), 'Vârf → apasă unde e pe hartă'))] : []));
 
     if (cfg.extras) cfg.extras({ root, rm, left, right, select, unitById, colorOf, startQuiz });
     renderInfo(null); mkLabels(); rm.setBase('color');
