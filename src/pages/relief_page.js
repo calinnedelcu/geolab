@@ -41,12 +41,11 @@ export async function buildReliefPage(cfg) {
     if (state.destroyed) { rm.dispose(); return; }
     rm.setUnits(cfg.units.map((u) => ({ id: u.id, color: colorOf(u) })));
 
-    // ------------- granițe și nume de țări
+    // ------------- granițe (fără nume de țări)
     if (borders) {
       const lines = borders.lines || borders.border;
       if (lines) rm.addLineLayer('borders', lines, { color: '#ffffff', width: cfg.key === 'europe' ? 1 : 2, opacity: cfg.key === 'europe' ? 0.55 : 0.95 });
       if (borders.neighbors) rm.addLineLayer('neighbors', borders.neighbors, { color: '#ffffff', width: 1, opacity: 0.3 });
-      if (borders.labels) borders.labels.forEach((c) => rm.addLabel({ lon: c.lon, lat: c.lat, text: c.name, cls: 'country', group: 'country', minZoom: rm._homeZoom + 0.5 }));
     }
     // ------------- vârfuri
     (cfg.peaks || []).forEach((p) => rm.addLabel({ lon: p.lon, lat: p.lat, html: `<span>${p.name}</span><i>${p.alt < 0 ? '−' : ''}${fmt(Math.abs(p.alt))} m</i>`, cls: 'peak', group: 'peak', title: p.note, minZoom: rm._homeZoom + (cfg.key === 'europe' ? 0.5 : 0.6) }));
@@ -71,7 +70,7 @@ export async function buildReliefPage(cfg) {
       h('div', { class: 'stack', style: { gap: '9px' } },
         toggle('Colorează unitățile', true, (v) => rm.setTint(v ? 0.44 : 0)),
         toggle('Margini între unități', true, (v) => rm.setEdges(v)),
-        borders ? toggle(cfg.key === 'europe' ? 'Granițe și nume de țări' : 'Granița României', true, (v) => { rm.setLayerVisible('borders', v); rm.setLayerVisible('neighbors', v); rm.setLabelsVisible('country', v); }) : null,
+        borders ? toggle(cfg.key === 'europe' ? 'Granițele țărilor' : 'Granița României', true, (v) => { rm.setLayerVisible('borders', v); rm.setLayerVisible('neighbors', v); }) : null,
         cfg.peaks ? toggle('Vârfuri-cheie', true, (v) => rm.setLabelsVisible('peak', v)) : null),
       h('div', { class: 'row', style: { marginTop: '12px', gap: '8px' } }, h('button', { class: 'btn small', onclick: () => rm.resetView() }, ic('expand'), 'Vedere de ansamblu')));
     left.append(layerPanel);
