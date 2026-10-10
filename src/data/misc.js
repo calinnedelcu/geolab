@@ -1,0 +1,92 @@
+// =====================================================================
+//  Ce intră la test + zone „de verificat” + glosar
+// =====================================================================
+
+export const EXAM = {
+  note: 'Exact ce ai scris în caiet la „Test”. Bifează pe măsură ce înveți; fiecare rând te duce la partea potrivită din site.',
+  groups: [
+    { id: 'isp', title: 'Insule, peninsule, mări, golfuri', icon: 'anchor', color: '#5eead4', rows: [
+      { id: 'isp1', label: 'Insulele Europei', links: [['Hartă + quiz', '#/insule']] },
+      { id: 'isp2', label: 'Peninsulele Europei', links: [['Hartă + quiz', '#/insule']] },
+      { id: 'isp3', label: 'Mările din jurul Europei', links: [['Hartă + quiz', '#/insule']] },
+      { id: 'isp4', label: 'Golfurile (și strâmtorile) principale', links: [['Hartă + quiz', '#/insule']] },
+    ], hint: 'În caiete e doar titlul capitolului; lista e pregătită din atlasul standard al Europei – verific-o cu atlasul din clasă.' },
+    { id: 'rel', title: 'Reliefuri', icon: 'mountain', color: '#a66bff', rows: [
+      { id: 'rel1', label: 'Relieful Europei: perioadele geologice și unitățile (30 de unități)', links: [['Hartă 2D', '#/relief-europa']] },
+      { id: 'rel2', label: 'Relieful României: Carpați, Subcarpați, podișuri, câmpii (17 unități)', links: [['Hartă 2D', '#/relief-romania']] },
+      { id: 'rel3', label: 'Tipuri de relief: glaciar, carstic, vulcanic, eolian, litoral', links: [['Scene animate', '#/tipuri-relief']] },
+      { id: 'rel4', label: 'Fișa generală: Europa vs. România (cifre, extreme, altitudini)', links: [['Fișa', '#/comparatie']] },
+    ] },
+    { id: 'clima', title: 'Clima', icon: 'cloud', color: '#34a853', rows: [
+      { id: 'cl1', label: 'Zonele de climă: temperat + rece → subpolar (mediteraneană, temperat oceanic, temperat continental, subpolar)', links: [['Harta zonelor', '#/zone-clima']] },
+      { id: 'cl2', label: 'Trecerea temperat oceanic → temperat continental: Germania', links: [['Vezi pe hartă', '#/zone-clima?zona=tranzitie']] },
+      { id: 'cl3', label: 'Fizionomia precipitațiilor pe grafice (cum arată barele în fiecare zonă)', links: [['Recunoaște zona', '#/climograf?tab=zona'], ['Galerie', '#/climograf?tab=galerie']] },
+      { id: 'cl4', label: 'Grafic: de calculat amplitudinea și temperatura medie', links: [['Calculează', '#/climograf?tab=calc'], ['Desenează', '#/climograf?tab=draw']] },
+      { id: 'cl5', label: 'Clima Europei: factorii climei, temperaturile, precipitațiile, vânturile (permanente, sezoniere, locale), cicloni și anticicloni', links: [['Factori + simulări', '#/clima-europa']] },
+      { id: 'cl6', label: 'Clima României: tipul de climă, influențele (vest-oceanice, scandinavo-baltice, est-europene, pontică, submediteraneene), Austrul, Foehn-ul, precipitațiile după altitudine', links: [['Simulare + test', '#/clima-romania']] },
+    ] },
+  ],
+  tipsHeard: 'La lucrare poate doar grafic: de calculat amplitudinea (diferența dintre max și min) și temperatura medie.',
+};
+
+// Lucruri neclare / diferențe între caiete – transparent, ca să le poți clarifica cu profesorul sau atlasul
+export const VERIFY = [
+  { sev: 'bad', topic: 'Relief Europa', item: 'Galdhøpiggen (Munții Scandinaviei)', detail: 'La tine: 2169 m • La coleg: 2469 m. Corect: 2469 m (probabil o greșeală de scris).', fix: 'Folosește 2469 m.' },
+  { sev: 'warn', topic: 'Relief Europa', item: 'Ben Nevis (Munții Scoției)', detail: 'Ambele caiete: 1343 m. Valoarea oficială de azi: 1345 m.', fix: 'La test scrie cum ai în caiet (1343 m).' },
+  { sev: 'warn', topic: 'Relief Europa', item: 'Munții Pennini – „978 m – Mas. Cumberland”', detail: '978 m este vârful Scafell Pike din Cumbria (fostul Cumberland), dar cel mai înalt vârf din Munții Pennini e Cross Fell (893 m).', fix: 'Întreabă profesorul ce vrea la „Pennini”.' },
+  { sev: 'warn', topic: 'Relief Europa', item: 'Cantabrici – 2665 m (Picos de Europa)', detail: 'Cel mai înalt vârf din Picos de Europa e Torre Cerredo, ≈ 2650 m. Ambele caiete au 2665 m.', fix: 'Scrie 2665 m, cum ai în caiet.' },
+  { sev: 'warn', topic: 'Relief Europa', item: 'Mont Blanc – 4810 m', detail: 'Măsurătorile recente dau ≈ 4806 m; manualele vechi: 4810 m.', fix: 'Scrie 4810 m.' },
+  { sev: 'warn', topic: 'Relief Europa', item: 'Lista hercinică: numerele 14–16', detail: 'La coleg lipsesc (după 13. M. Cantabrici urmează direct 17. M. Pirinei). În caietul tău, pe ultimele rânduri hercinice, se citește „M. Jura – 1723 m” și alte cuvinte greu de descifrat (probabil Boemia / Sudeți / Meseta).', fix: 'Compară cu atlasul / cere lista completă colegului.' },
+  { sev: 'warn', topic: 'Relief România', item: 'Podișul Casimcei', detail: 'La coleg e la „Caledonic” (B. Pod. Casimcei – șisturile verzi). În caietul tău apare lângă „Precambrian”, alături de fundamentul Pod. Moldovei.', fix: 'Clarifică la ce perioadă îl trece profesorul.' },
+  { sev: 'warn', topic: 'Relief România', item: 'Subcarpații Getici – structura', detail: 'La coleg: „prin încrețire, roci sedimentare, structură simplă”. La tine: „sunt ca ai Curburii” (structură complexă) – dar 1218 m (Dealul Chicioara) e la fel în ambele.', fix: 'Verifică.' },
+  { sev: 'warn', topic: 'Relief România', item: 'Podișul Mehedinți – „885 m – Dl. …”', detail: 'Numele dealului nu se poate citi în caietul tău; colegul nu are detalii despre acest podiș.', fix: 'Completează din atlas.' },
+  { sev: 'warn', topic: 'Relief România', item: 'D.C.T. – 1080 m (Dealul Bicheș)', detail: 'Apare doar în caietul colegului (în al tău nu e notată altitudinea).', fix: 'Ia-o așa cum e la coleg.' },
+  { sev: 'warn', topic: 'Relief România', item: 'Dealurile de Vest – „Culmea Prelucă” (795 m)', detail: 'Numele e scris la fel în ambele caiete; nu l-am putut confirma pe internet.', fix: 'Folosește varianta din caiet.' },
+  { sev: 'warn', topic: 'Relief România', item: 'Carpații Meridionali – „relief glaciar (>180)” și Occidentali – „relief carstic (>10 K peșteri)”', detail: 'Nu e precizat ce numără cifra 180 (lacuri? circuri?) și cât înseamnă „10 K”.', fix: 'Întreabă profesorul.' },
+  { sev: 'warn', topic: 'Relief România', item: 'Altitudinea minimă a României', detail: 'La coleg: „Min: 5 m (câmp. Sirețului inferior? / țărmul marin la 0 m)”; în caietul tău cuvintele nu se pot citi bine.', fix: 'Reține: țărmul mării = 0 m.' },
+  { sev: 'warn', topic: 'Climă', item: 'Fișa „Tropical uscat”: t.m.a = 15–16 °C; „Tropical umed”: 15–18 °C', detail: 'Pare mic față de realitate (deșerturile tropicale au 20–30 °C). Am păstrat cifrele de pe fișă în site.', fix: 'Dacă la test sunt cifre diferite, urmează profesorul.' },
+  { sev: 'warn', topic: 'Climă', item: 'Fișa „Subecuatorială”: sezon umed/uscat', detail: 'Pe fișă: umed = „se extind alizeele din zona ecuatorială”, uscat = „se resimt calmele ecuatoriale”. În realitate e invers.', fix: 'Reține varianta de pe fișă pentru test.' },
+  { sev: 'warn', topic: 'Climă', item: 'Ciclon / anticiclon', detail: 'Formulările diferă (la coleg „ciclon = aer uscat, anticiclon = aer umed”). În meteorologie: ciclon = presiune scăzută (nori, ploi); anticiclon = presiune ridicată (senin).', fix: 'Ține cont de explicația profesorului.' },
+  { sev: 'warn', topic: 'Climă', item: 'Vânturi locale: Austrul, Bora, „Coasta de Aur”', detail: 'La coleg: „Austrul (țărmul dalmatic – Balcani); Bora (Coasta de Aur?, Dalmația)”. În realitate Bora bate în Dalmația, Austrul în sudul României; „Coasta de Aur” – probabil Coasta de Azur (Mistralul).', fix: 'Verifică cu profesorul.' },
+  { sev: 'info', topic: 'Climă', item: 'Subpolar vs. polar', detail: 'Pe fișă, exemplele de la „Subpolar” sunt insule arctice (Groenlanda N, Novaia Zemlea N etc.), deși la latitudine ar fi „polar”. Polar = Antarctica și Groenlanda (calote).', fix: 'Folosește exemplele de pe fișă.' },
+  { sev: 'warn', topic: 'Test', item: 'Insule, peninsule, mări, golfuri', detail: 'Intră la test, dar în caiete apare doar titlul capitolului (fără liste). Secțiunea din site e făcută din atlasul standard al Europei și date deschise – verific-o cu atlasul din clasă și cu lista profesorului.', fix: 'Cere lista exactă de la profesor / completează din atlas.' },
+];
+
+export const GLOSSARY = [
+  { term: 'Orogeneză', def: 'Procesul de formare a munților (încrețirea scoarței terestre).', src: 'X' },
+  { term: 'Încrețire', def: 'Cutarea straturilor de roci prin presiune laterală; formează munți (și dealuri) cutați.', src: 'UX' },
+  { term: 'Fliș', def: 'Alternanță de roci sedimentare (gresii, marne, argile) cutate – domină fâșia estică a Carpaților Orientali.', src: 'UX' },
+  { term: 'Șisturi cristaline', def: 'Roci metamorfice vechi; domină Carpații Meridionali și fâșia centrală a Orientalilor.', src: 'UX' },
+  { term: 'Mozaic petrografic', def: 'Tipuri foarte diferite de roci, apropiate între ele (Carpații Occidentali).', src: 'U' },
+  { term: 'Carst', def: 'Relief format prin dizolvarea calcarelor: peșteri, doline, chei.', src: 'UC' },
+  { term: 'Dolină', def: 'Adâncitură în formă de pâlnie, în relieful carstic.', src: 'UC' },
+  { term: 'Chei', def: 'Văi înguste și adânci, cu pereți abrupți, în calcare.', src: 'UC' },
+  { term: 'Circ glaciar', def: 'Adâncitură în formă de fotoliu săpată de ghețar în munte; adesea cu lac glaciar.', src: 'UC' },
+  { term: 'Fiord', def: 'Golf lung, îngust și adânc, săpat de un ghețar și invadat de mare (Norvegia).', src: 'UC' },
+  { term: 'Estuar', def: 'Gură de vărsare în formă de pâlnie (Sena, Tamisa, Elba).', src: 'UC' },
+  { term: 'Deltă', def: 'Gură de vărsare ramificată, formată din aluviuni (Dunăre, Pad, Ron, Rin, Tibru).', src: 'UC' },
+  { term: 'Țărm dalmatic', def: 'Țărm cu insule și peninsule paralele cu munții (coasta Mării Adriatice).', src: 'UX' },
+  { term: 'Grind', def: 'Fâșie de uscat alungită, ridicată ușor deasupra apelor (ex.: Grindul Letea, 12 m).', src: 'UX' },
+  { term: 'Polder', def: 'Teren câștigat de la mare prin diguri și desecare – crește suprafața țării.', src: 'UC' },
+  { term: 'Abraziune', def: 'Erodarea țărmului de către valuri (face să scadă suprafața).', src: 'UC' },
+  { term: 'Subsidență', def: 'Coborârea lentă a scoarței terestre.', src: 'UC' },
+  { term: 'Permafrost', def: 'Sol înghețat permanent (tundra arctică); în caiet și „merzlotă”.', src: 'UC' },
+  { term: 'T.M.A.', def: 'Temperatura medie anuală.', src: 'U' },
+  { term: 'pp.m.a.', def: 'Precipitațiile medii anuale (mm/an).', src: 'F' },
+  { term: 'Amplitudine termică', def: 'Diferența dintre temperatura maximă și cea minimă (lunare, într-un an).', src: 'U' },
+  { term: 'Alizee', def: 'Vânturi permanente dinspre tropice spre Ecuator (NE în emisfera nordică).', src: 'UC' },
+  { term: 'Calme ecuatoriale', def: 'Zonă fără vânt dominant la Ecuator; aerul urcă și plouă mult.', src: 'F' },
+  { term: 'Foehn', def: 'Vânt cald și uscat care coboară pe versantul adăpostit al unui munte.', src: 'UC' },
+  { term: 'Briză', def: 'Vânt local sezonier/zilnic (montană, litorală).', src: 'UC' },
+  { term: 'Ciclon / anticiclon', def: 'Centre de presiune: ciclon = presiune scăzută (nori, ploaie); anticiclon = presiune ridicată (senin).', src: 'UCX' },
+  { term: 'Lateritic (sol)', def: 'Sol roșcat, bine format dar nefertil – zonele ecuatoriale.', src: 'F' },
+  { term: 'Terra rossa', def: 'Sol roșu, pe calcare – clima mediteraneană.', src: 'F' },
+  { term: 'Cambisol', def: 'Sol brun – clima temperat oceanică.', src: 'F' },
+  { term: 'Molisol', def: 'Sol negru, foarte fertil (cernoziom) – stepă.', src: 'F' },
+  { term: 'Spodosol', def: 'Sol de taiga (podzol).', src: 'F' },
+  { term: 'Taiga', def: 'Pădure de conifere (molid, brad…) din zona „rece” a climei temperat-continentale.', src: 'F' },
+  { term: 'Stepă / prerie / pampas', def: 'Formațiuni ierboase din zonele semiaride (Eurasia / America de Nord / America de Sud).', src: 'F' },
+  { term: 'Tundră', def: 'Vegetație de mușchi și licheni, adaptată la frig + vânt (subpolar).', src: 'F' },
+  { term: 'Savană', def: 'Câmpie cu ierburi înalte și arbori răzleți (subecuatorial).', src: 'F' },
+  { term: 'Selvas', def: 'Pădurea ecuatorială din Amazonia.', src: 'F' },
+];

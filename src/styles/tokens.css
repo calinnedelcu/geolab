@@ -1,0 +1,89 @@
+/* ---------- Fonturi (încorporate => funcționează offline) ---------- */
+@font-face {
+  font-family: "Inter Var";
+  font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url("../fonts/inter-latin-ext-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Inter Var";
+  font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url("../fonts/inter-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ---------- Tokeni de culoare ---------- */
+:root {
+  color-scheme: dark;
+  --font: "Inter Var", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --bg: #070b18;
+  --bg-glow-1: rgba(70, 90, 255, .20);
+  --bg-glow-2: rgba(40, 210, 190, .13);
+  --surface: #0e1530;
+  --surface-2: #141d3f;
+  --surface-3: #1b2650;
+  --glass: rgba(16, 24, 54, .62);
+  --glass-strong: rgba(11, 17, 40, .88);
+  --line: rgba(150, 170, 255, .14);
+  --line-strong: rgba(150, 170, 255, .28);
+  --text: #eaf0ff;
+  --muted: #a3b0d6;
+  --faint: #6f7ca6;
+
+  --accent: #5eead4;
+  --accent-ink: #04201c;
+  --accent-2: #8b9cff;
+  --warm: #ffb454;
+  --pink: #ff7aa8;
+  --ok: #4ade80;
+  --bad: #ff6b81;
+  --info: #67b7ff;
+
+  --shadow-1: 0 1px 0 rgba(255,255,255,.04) inset, 0 8px 24px -8px rgba(0,0,0,.55);
+  --shadow-2: 0 18px 50px -12px rgba(0,0,0,.65);
+  --ring: 0 0 0 3px rgba(94, 234, 212, .35);
+
+  --radius-s: 8px; --radius: 14px; --radius-l: 22px;
+  --sidebar-w: 268px;
+  --topbar-h: 64px;
+  --ease: cubic-bezier(.2,.8,.2,1);
+
+  /* culori periode / grupe (folosite în hărți) */
+  --per-precambrian: #d9b13b;
+  --per-caledonic: #ef6c57;
+  --per-hercinic: #4aa3df;
+  --per-alpin: #a66bff;
+
+  --stage-bg-a: #0c1636; --stage-bg-b: #060a18;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #eef2fb;
+  --bg-glow-1: rgba(90, 110, 255, .16);
+  --bg-glow-2: rgba(40, 200, 180, .13);
+  --surface: #ffffff;
+  --surface-2: #f4f6fd;
+  --surface-3: #e8edfb;
+  --glass: rgba(255, 255, 255, .72);
+  --glass-strong: rgba(255, 255, 255, .94);
+  --line: rgba(40, 60, 130, .13);
+  --line-strong: rgba(40, 60, 130, .26);
+  --text: #0e1631;
+  --muted: #46547f;
+  --faint: #7482ab;
+  --accent: #0d9e91;
+  --accent-ink: #ffffff;
+  --accent-2: #4f5fe8;
+  --warm: #e08a14;
+  --pink: #e0457b;
+  --ok: #1fa35a;
+  --bad: #de3b57;
+  --info: #2a7de1;
+  --shadow-1: 0 1px 0 rgba(255,255,255,.6) inset, 0 6px 20px -8px rgba(40,60,130,.28);
+  --shadow-2: 0 18px 50px -14px rgba(40,60,130,.35);
+  --ring: 0 0 0 3px rgba(13, 158, 145, .32);
+  --stage-bg-a: #d9e4ff; --stage-bg-b: #f4f7ff;
+}

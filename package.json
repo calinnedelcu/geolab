@@ -1,0 +1,14 @@
+{
+  "name": "geolab-europa-romania",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GeoLab – site interactiv (hărți 2D, climă, climograf, teste) pentru Europa și România",
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "leaflet": "^1.9.4"
+  }
+}
