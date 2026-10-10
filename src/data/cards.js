@@ -199,7 +199,6 @@ export function buildBonusCards(items) {
 export function bonusQuestions(items) {
   const Q = []; const base = items.filter((x) => x.importance === 1); const mc = (q, a, wrong, why) => Q.push({ topic: 'insule-mari', q, a, opts: shuf([a, ...pickN([...new Set(wrong.filter(Boolean))], 3, a)]), why });
   base.forEach((x) => {
-    mc(`„${x.name}” este o…`, CAT1[x.cat], Object.values(CAT1), `${x.name}: ${CAT1[x.cat]}.`);
     const where = txt(x.country || x.belongsTo); if (where) mc(`${x.name} – unde se află / cui aparține?`, where, base.filter((y) => y.cat === x.cat).map((y) => txt(y.country || y.belongsTo)), `${x.name}: ${where}.`);
     if (x.cat === 'stramtoare' && x.connects && x.connects.length >= 2) mc(`Ce leagă ${x.name}?`, x.connects.join(' ↔ '), base.filter((y) => y.connects && y.connects.length >= 2).map((y) => y.connects.join(' ↔ ')), `${x.name}: ${x.connects.join(' ↔ ')}.`);
   });
