@@ -83,7 +83,7 @@ export default async function insule() {
     const restyle = () => { items.forEach((it) => { layerOf[it.id].setStyle(styleOf(it)); }); relabel(); const s = st.sel && layerOf[st.sel]; if (s && s.bringToFront) s.bringToFront(); };
     // etichete fără suprapuneri (alocare lacomă după importanță și mărime)
     function relabel() {
-      const z = map.getZoom(); const placed = []; const order = items.filter((it) => isVisible(it) && st.names && !(st.quiz && st.quiz.mode === 'find')).sort((a, b) => (a.importance - b.importance) || (b._area - a._area));
+      const z = map.getZoom(); const placed = []; const order = items.filter((it) => isVisible(it) && st.names && !(st.quiz && ['find', 'recognize', 'type'].includes(st.quiz.mode))).sort((a, b) => (a.importance - b.importance) || (b._area - a._area));
       const shown = new Set();
       order.forEach((it) => {
         const pt = map.latLngToContainerPoint([it.lonLat[1], it.lonLat[0]]); const size = map.getSize(); if (pt.x < -40 || pt.y < -20 || pt.x > size.x + 40 || pt.y > size.y + 20) return;
@@ -105,7 +105,7 @@ export default async function insule() {
     };
     map.on('mousemove', (e) => {
       readout.set(`<b>${fmtLat(e.latlng.lat)}, ${fmtLon(e.latlng.lng)}</b>`);
-      if (st.quiz && st.quiz.mode === 'find') { tip.style.display = 'none'; mapbox.style.cursor = ''; return; }
+      if (st.quiz && ['find', 'recognize', 'type'].includes(st.quiz.mode)) { tip.style.display = 'none'; mapbox.style.cursor = ''; return; }
       const it = hit(e.latlng); mapbox.style.cursor = it ? 'pointer' : ''; const id = it ? it.id : null;
       if (id !== st.hover) { const old = st.hover; st.hover = id; old && layerOf[old] && layerOf[old].setStyle(styleOf(byId[old])); id && layerOf[id].setStyle(styleOf(it)); }
       if (it) { tip.style.display = 'block'; tip.style.left = e.containerPoint.x + 14 + 'px'; tip.style.top = e.containerPoint.y + 14 + 'px'; tip.innerHTML = `<div>${it.name}</div><small>${CATS[it.cat].one}${it.country ? ' · ' + it.country : ''}</small>`; } else tip.style.display = 'none';
@@ -145,7 +145,7 @@ export default async function insule() {
     left.append(controls, qBox, progBox);
 
     // ---------------- teste
-    const modes = [['find', 'Găsește pe hartă', 'target'], ['cat', 'Ce este? (insulă / mare / golf …)', 'help'], ['where', 'Unde se află? / Face parte din?', 'pin'], ['connect', 'Ce leagă strâmtoarea?', 'route'], ['type', 'Hartă oarbă – scrie numele', 'edit']];
+    const modes = [['find', 'Găsește pe hartă', 'target'], ['recognize', 'Recunoaște unitatea', 'help'], ['where', 'Unde se află? / Face parte din?', 'pin'], ['connect', 'Ce leagă strâmtoarea?', 'route'], ['type', 'Hartă oarbă – scrie numele', 'edit']];
     const menu = () => { clear(qBox); qBox.append(h('h4', null, 'Exersează'), h('div', { class: 'stack' }, modes.map(([id, l, ico]) => h('button', { class: 'btn small', style: { justifyContent: 'flex-start' }, onclick: () => startQuiz(id) }, ic(ico === 'edit' ? 'help' : ico), l))), h('div', { class: 'hint', style: { marginTop: '8px' } }, 'Se folosesc doar elementele esențiale ★.')); };
     const qPanel = h('div'); dock.append(qPanel); const showDock = (on) => { dock.style.display = on ? 'block' : 'none'; setTimeout(() => map.invalidateSize(), 30); };
     const poolFor = (mode) => { const base = items.filter((x) => (st.core ? CORE.has(x.id) : x.importance === 1)); if (mode === 'where') return base.filter((x) => ['insula', 'peninsula', 'mare', 'golf'].includes(x.cat) && (x.country || x.belongsTo)); if (mode === 'connect') return items.filter((x) => x.cat === 'stramtoare' && x.connects && x.connects.length >= 2); return base; };
@@ -161,7 +161,7 @@ export default async function insule() {
       const mc = (right, wrong) => { const o = shuffle([right, ...shuffle([...new Set(wrong)].filter((x) => x && x !== right)).slice(0, 3)]); return h('div', { class: 'grid c2', style: { gap: '8px' } }, o.map((x) => h('button', { class: 'btn opt', style: { justifyContent: 'flex-start', textAlign: 'left', whiteSpace: 'normal' }, onclick: (e) => { if (q.locked) return; const ok = x === right; e.currentTarget.classList.add(ok ? 'good' : 'bad'); if (!ok) [...qPanel.querySelectorAll('button.opt')].find((b) => b.textContent === right)?.classList.add('good'); adv(ok); } }, x))); };
       const textOf = (v) => (Array.isArray(v) ? v.join(', ') : v);
       if (q.mode === 'find') { q.adv = adv; qPanel.append(head2, h('h3', { style: { margin: 0 } }, 'Apasă pe: ', h('span', { class: 'gradient-text' }, it.name), ` (${CATS[it.cat].one})`), h('div', { class: 'hint' }, 'Etichetele sunt ascunse. Se acceptă și o apăsare foarte apropiată.'), h('button', { class: 'btn small ghost', style: { marginTop: '8px' }, onclick: () => { map.flyTo([it.lonLat[1], it.lonLat[0]], Math.min(5, map.getZoom() + 0.5), { duration: 0.7 }); toast({ icon: 'bulb', title: 'Indiciu', text: it.country ? `Zona: ${textOf(it.country)}` : it.belongsTo ? `Zona: ${textOf(it.belongsTo)}` : '' }); } }, ic('bulb'), 'Indiciu')); }
-      else if (q.mode === 'cat') qPanel.append(head2, h('h3', { style: { margin: '0 0 8px' } }, ['„', h('span', { class: 'gradient-text' }, it.name), '” este o…']), mc(CATS[it.cat].one, Object.values(CATS).map((c) => c.one)));
+      else if (q.mode === 'recognize') { st.sel = it.id; restyle(); flyToItem(it); const pool = (st.core ? items.filter((x) => CORE.has(x.id)) : items.filter((x) => x.importance === 1)).filter((x) => x.cat === it.cat).map((x) => x.name); qPanel.append(head2, h('h3', { style: { margin: '0 0 8px' } }, `Cum se numește ${CATS[it.cat].one === 'mare' ? 'marea' : 'elementul'} evidențiat(ă) pe hartă?`), mc(it.name, pool)); }
       else if (q.mode === 'where') {
         let right, wrongPool, prompt; const sameCat = items.filter((x) => (st.core ? CORE.has(x.id) : x.importance === 1) && x.cat === it.cat);
         if (it.cat === 'insula' && it.country && it.belongsTo && Math.random() < 0.5) { right = shortTxt(it.belongsTo); wrongPool = sameCat.map((x) => shortTxt(x.belongsTo)); prompt = ['În ce mare / ocean se află ', h('span', { class: 'gradient-text' }, it.name), '?']; }

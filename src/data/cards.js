@@ -1,5 +1,5 @@
 // Carduri de memorare + banca de întrebări (generate din datele din caiete)
-import { EU_UNITS, RO_UNITS, PERIODS, PERIOD_BY_ID, GENERAL, RELIEF_TYPES, TERMS, EU_PEAKS } from './relief.js';
+import { EU_UNITS, RO_UNITS, PERIODS, PERIOD_BY_ID, GENERAL, RELIEF_TYPES, TERMS, EU_PEAKS, RO_PEAKS } from './relief.js';
 import { ZONES, MAIN_ZONES, FACTORS, WINDS, CENTERS, RO_CLIMATE, TEMPS, PRECIP, LAPSE, TEST_SHAPES } from './clima.js';
 
 const alt = (a) => (a ? `${a.v < 0 ? '−' : ''}${Math.abs(a.v)} m (${a.where})` : null);
@@ -97,6 +97,12 @@ export function questionPool() {
     if (u.alt) mc('relief-europe', `Altitudinea maximă din caiet pentru ${u.name} este:`, `${Math.abs(u.alt.v)} m`.replace(/^/, u.alt.v < 0 ? '−' : ''), eu.filter((x) => x.alt && x !== u).map((x) => `${x.alt.v < 0 ? '−' : ''}${Math.abs(x.alt.v)} m`), `${u.name}: ${u.alt.v} m (${u.alt.where}).`);
   });
   EU_PEAKS.filter((p) => p.alt > 0).forEach((p) => mc('relief-europe', `Vârful ${p.name} (${p.alt} m) se află în:`, p.note.includes('–') ? p.note.split('–')[0].trim() : p.note, ['Pirinei', 'Alpi', 'Carpați', 'Caucaz', 'Munții Ural', 'Munții Scandinaviei'], `${p.name} – ${p.note}.`));
+  // Vârfuri: dat vârful, alege altitudinea (variante apropiate ca ordin de mărime)
+  const peakAlt = (list, topic) => list.filter((p) => p.alt > 0).forEach((p) => {
+    const near = new Set(); [0.9, 0.8, 1.12, 1.25, 0.7, 1.4].forEach((f) => { const v = Math.round((p.alt * f) / 10) * 10 + (p.alt % 10 ? 4 : 0); if (v !== p.alt && v > 0) near.add(v); }); list.forEach((x) => { if (x !== p && x.alt > 0 && Math.abs(x.alt - p.alt) < p.alt * 0.45) near.add(x.alt); });
+    mc(topic, `Care este altitudinea vârfului ${p.name} (${p.note})?`, `${p.alt} m`, [...near].map((v) => `${v} m`), `${p.name}: ${p.alt} m.`);
+  });
+  peakAlt(EU_PEAKS, 'relief-europe'); peakAlt(RO_PEAKS, 'relief-romania');
   mc('relief-europe', 'Cea mai joasă cotă din Europa se află în:', 'Depresiunea Pericaspică (−28 m)', ['Delta Dunării', 'Câmpia Padului', 'Câmpia Panonică', 'Țările de Jos'], 'Pericaspica: −28 m.');
   mc('relief-europe', 'Altitudinea maximă a Europei (după caiet, cu Caucazul) este:', 'Elbrus – 5642 m', ['Mont Blanc – 4810 m', 'Moldoveanu – 2544 m', 'Galdhøpiggen – 2469 m'], 'Elbrus 5642 m (Caucaz); Mont Blanc 4810 m.');
   mc('relief-europe', 'Fusul orar al României este:', 'GMT+2', ['GMT+1', 'GMT+3', 'GMT'], 'GMT+2.');
