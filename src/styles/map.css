@@ -19,7 +19,7 @@
 .mp-center { display: flex; flex-direction: column; min-width: 0; min-height: 0; position: relative; }
 .mp-head { flex: none; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--glass); flex-wrap: wrap; }
 .mp-map { position: relative; flex: 1 1 auto; min-height: 0; background: var(--sea); }
-.mp-dock { flex: none; max-height: 46%; overflow: auto; padding: 14px 16px; border-top: 1px solid var(--line); background: var(--surface); }
+.mp-dock { flex: none; height: clamp(210px, 31vh, 280px); max-height: 46%; overflow: auto; padding: 14px 16px; border-top: 1px solid var(--line); background: var(--surface); }
 .mp-overlay { position: absolute; inset: 0; z-index: 1200; cursor: auto; overflow: auto; padding: 24px; background: color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter: blur(10px); }
 .mp-map .loader { position: absolute; inset: 0; background: var(--sea); color: #fff; z-index: 5; }
 .info-card { position: relative; }
@@ -34,6 +34,7 @@
   .mp-side { order: 2; border: 0 !important; padding-top: 14px !important; overflow: visible; }
   .mp-side.right { order: 3; }
   .mp-toggle { display: none; }
+  .mp-dock { height: auto; max-height: none; }
   .mapage.hide-left .mp-side.left > :not(.mp-toggle), .mapage.hide-right .mp-side.right > :not(.mp-toggle) { display: revert; }
 }
 
