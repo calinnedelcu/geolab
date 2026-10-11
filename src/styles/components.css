@@ -175,3 +175,6 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border-radius
 .opt.bad { background: color-mix(in srgb, var(--bad) 26%, var(--surface-2)) !important; border-color: var(--bad) !important; }
 button.opt:disabled { opacity: 1; cursor: default; }
 .btn.opt:disabled:hover { transform: none; }
+
+.lbl.peak.extreme i { color: #7dd3fc; }
+.lbl.peak.extreme::after { border-left-color: #7dd3fc; }

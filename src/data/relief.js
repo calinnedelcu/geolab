@@ -116,6 +116,8 @@ export const EU_PEAKS = [
   { name: 'Iaila (Crimeea)', alt: 1545, lon: 34.25, lat: 44.6, note: 'Munții Crimeei' },
   { name: 'Moldoveanu', alt: 2544, lon: 24.738, lat: 45.599, note: 'cel mai înalt din România' },
   { name: 'Munții Hibini', alt: 1191, lon: 33.7, lat: 67.7, note: 'Laponia (Pen. Kola)' },
+  { name: 'Mas. Cumberland (Scafell Pike)', alt: 978, lon: -3.212, lat: 54.454, note: 'Pennini (nordul) – poz. aprox.' },
+  { name: 'Munții Jura (vf. maxim)', alt: 1723, lon: 5.91, lat: 46.29, note: 'Jura – în caiet doar „vf. maxim”, poz. aprox.' },
   { name: 'Depr. Pericaspică', alt: -28, lon: 47.5, lat: 47.0, note: 'cea mai joasă cotă din Europa' },
 ];
 
@@ -193,6 +195,14 @@ export const RO_PEAKS = [
   { name: 'Țuțuiatu (Măcin)', alt: 467, lon: 28.17, lat: 45.19, note: 'Dobrogea de Nord – hercinic' },
   { name: 'Măgura Odobești', alt: 996, lon: 27.07, lat: 45.78, note: 'Subcarpații Curburii' },
   { name: 'Dealul Chicioara', alt: 1218, lon: 24.8, lat: 45.2, note: 'Subcarpații Getici (poz. aprox.)' },
+  { name: 'Culmea Pleșu', alt: 911, lon: 26.81, lat: 46.81, note: 'Subcarpații Moldovei (poz. aprox.)' },
+  { name: 'Dealul Ciungi', alt: 688, lon: 27.68, lat: 46.22, note: 'Podișul Moldovei (poz. aprox.)' },
+  { name: 'Plaiul Galben', alt: 745, lon: 24.67, lat: 44.51, note: 'Podișul Getic (poz. aprox.)' },
+  { name: 'Deal fără nume în caiet', alt: 885, lon: 22.87, lat: 44.82, note: 'Podișul Mehedinți (nume ilizibil, poz. aprox.)' },
+  { name: 'Dealul Bicheș', alt: 1080, lon: 24.65, lat: 46.19, note: 'Depresiunea Colinară a Transilvaniei (poz. aprox.)' },
+  { name: 'Culmea Prelucă', alt: 795, lon: 21.88, lat: 45.87, note: 'Dealurile de Vest (poz. aprox.)' },
+  { name: 'Câmpia Piteștilor', alt: 300, lon: 24.3, lat: 44.8, note: 'Câmpia Română (poz. aprox.)' },
+  { name: 'Câmpia Vingăi', alt: 180, lon: 21.2, lat: 46.0, note: 'Câmpia de Vest' },
   { name: 'Grindul Letea', alt: 12, lon: 29.5, lat: 45.32, note: 'Delta Dunării' },
 ];
 

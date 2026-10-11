@@ -1,6 +1,6 @@
 import { h, clear } from '../core/dom.js';
 import { ic, srcTag, chip } from '../core/ui.js';
-import { PERIODS, PERIOD_BY_ID, EU_UNITS, EU_PEAKS, EU_MISSING, PERIOD_MNEMONIC } from '../data/relief.js';
+import { GENERAL, PERIODS, PERIOD_BY_ID, EU_UNITS, EU_PEAKS, EU_MISSING, PERIOD_MNEMONIC } from '../data/relief.js';
 import { buildReliefPage, shade } from './relief_page.js';
 
 // „Mașina timpului”: dezvăluie unitățile în ordinea apariției lor
@@ -42,7 +42,7 @@ export default async function relieEuropa(ctx) {
   const cfg = {
     key: 'europe', assetName: 'terrain_europe', unitsAsset: 'units_europe', bordersAsset: 'borders_europe',
     units: EU_UNITS, groups: PERIODS.map((p) => ({ id: p.id, name: p.name, color: p.color })), groupOf: (u) => { const p = PERIOD_BY_ID[u.per]; return { id: p.id, name: p.name, color: p.color }; },
-    peaks: EU_PEAKS, filterTitle: 'Perioade geologice (filtru)', listTitle: 'Cele 30 de unități (numerotarea din caiet)',
+    peaks: EU_PEAKS, extremes: GENERAL.euExtremes, filterTitle: 'Perioade geologice (filtru)', listTitle: 'Cele 30 de unități (numerotarea din caiet)',
     missingNote: `Numerele ${EU_MISSING.join(' și ')} lipsesc din caietul colegului (și sunt greu de citit în al tău).`,
     emptyText: 'Apasă pe o unitate colorată de pe hartă sau alege din listă. Culoarea arată perioada geologică în care s-a format: Precambrian, Caledonic, Hercinic, Alpin.',
     timeMachine, labelNum: (u) => u.id,

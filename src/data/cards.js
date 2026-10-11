@@ -101,7 +101,7 @@ export function questionPool() {
   // Vârfuri: dat vârful, alege altitudinea (variante apropiate ca ordin de mărime)
   const peakAlt = (list, topic) => list.filter((p) => p.alt > 0).forEach((p) => {
     const near = new Set(); [0.9, 0.8, 1.12, 1.25, 0.7, 1.4].forEach((f) => { const v = Math.round((p.alt * f) / 10) * 10 + (p.alt % 10 ? 4 : 0); if (v !== p.alt && v > 0) near.add(v); }); list.forEach((x) => { if (x !== p && x.alt > 0 && Math.abs(x.alt - p.alt) < p.alt * 0.45) near.add(x.alt); });
-    mc(topic, `Care este altitudinea vârfului ${p.name} (${p.note})?`, `${p.alt} m`, [...near].map((v) => `${v} m`), `${p.name}: ${p.alt} m.`);
+    mc(topic, `Care este altitudinea (cota maximă) pentru ${p.name} (${p.note})?`, `${p.alt} m`, [...near].map((v) => `${v} m`), `${p.name}: ${p.alt} m.`);
   });
   peakAlt(EU_PEAKS, 'relief-europe'); peakAlt(RO_PEAKS, 'relief-romania');
   mc('relief-europe', 'Cea mai joasă cotă din Europa se află în:', 'Depresiunea Pericaspică (−28 m)', ['Delta Dunării', 'Câmpia Padului', 'Câmpia Panonică', 'Țările de Jos'], 'Pericaspica: −28 m.');

@@ -47,6 +47,8 @@ export async function buildReliefPage(cfg) {
       if (lines) rm.addLineLayer('borders', lines, { color: '#ffffff', width: cfg.key === 'europe' ? 1 : 2, opacity: cfg.key === 'europe' ? 0.55 : 0.95 });
       if (borders.neighbors) rm.addLineLayer('neighbors', borders.neighbors, { color: '#ffffff', width: 1, opacity: 0.3 });
     }
+    // ------------- puncte extreme (N, S, E, V)
+    (cfg.extremes || []).forEach((e) => rm.addLabel({ lon: e.lon, lat: e.latv, html: `<span>${e.name}</span><i>${e.dir} · ${e.lat}</i>`, cls: 'peak extreme', group: 'extreme', title: e.country || e.county }));
     // ------------- vârfuri
     (cfg.peaks || []).forEach((p) => rm.addLabel({ lon: p.lon, lat: p.lat, html: `<span>${p.name}</span><i>${p.alt < 0 ? '−' : ''}${fmt(Math.abs(p.alt))} m</i>`, cls: 'peak', group: 'peak', title: p.note, minZoom: rm._homeZoom + (cfg.key === 'europe' ? 0.5 : 0.6) }));
 
@@ -71,7 +73,8 @@ export async function buildReliefPage(cfg) {
         toggle('Colorează unitățile', true, (v) => rm.setTint(v ? 0.44 : 0)),
         toggle('Margini între unități', true, (v) => rm.setEdges(v)),
         borders ? toggle(cfg.key === 'europe' ? 'Granițele țărilor' : 'Granița României', true, (v) => { rm.setLayerVisible('borders', v); rm.setLayerVisible('neighbors', v); }) : null,
-        cfg.peaks ? toggle('Vârfuri-cheie', true, (v) => rm.setLabelsVisible('peak', v)) : null),
+        cfg.peaks ? toggle('Vârfuri-cheie', true, (v) => rm.setLabelsVisible('peak', v)) : null,
+        cfg.extremes ? toggle('Puncte extreme (N, S, E, V)', true, (v) => rm.setLabelsVisible('extreme', v)) : null),
       h('div', { class: 'row', style: { marginTop: '12px', gap: '8px' } }, h('button', { class: 'btn small', onclick: () => rm.resetView() }, ic('expand'), 'Vedere de ansamblu')));
     left.append(layerPanel);
 
@@ -205,9 +208,9 @@ export async function buildReliefPage(cfg) {
       const skip = h('button', { class: 'btn small ghost', onclick: () => { if (q.locked) return; q.bad++; q.i++; nextPQ(); } }, 'Sari peste');
       if (q.mode === 'alt') {
         rm.map.flyTo([p.lat, p.lon], rm._homeZoom + 1.3, { duration: 0.7 }); rm.addLabel({ lon: p.lon, lat: p.lat, html: '', cls: 'peakdot ans', group: 'pdot-ans' });
-        quizPanel.append(head, h('h3', { style: { margin: '0 0 8px' } }, 'Ce înălțime are vârful ', h('span', { class: 'gradient-text' }, p.name), '?'), h('div', { class: 'grid c2', style: { gap: '8px' } }, peakAltOpts(p).map((v) => h('button', { class: 'btn opt', 'data-v': v, onclick: (e) => peakAnswer(v === p.alt, e.currentTarget) }, `${fmt(v)} m`))));
+        quizPanel.append(head, h('h3', { style: { margin: '0 0 8px' } }, 'Care este altitudinea (cota maximă) pentru: ', h('span', { class: 'gradient-text' }, p.name), '?'), h('div', { class: 'grid c2', style: { gap: '8px' } }, peakAltOpts(p).map((v) => h('button', { class: 'btn opt', 'data-v': v, onclick: (e) => peakAnswer(v === p.alt, e.currentTarget) }, `${fmt(v)} m`))));
       } else {
-        const ask = q.mode === 'name' ? ['Apasă pe vârful de ', h('span', { class: 'gradient-text' }, `${fmt(p.alt)} m`)] : ['Unde se află vârful ', h('span', { class: 'gradient-text' }, p.name), '?'];
+        const ask = q.mode === 'name' ? ['Apasă pe punctul de ', h('span', { class: 'gradient-text' }, `${fmt(p.alt)} m`)] : ['Unde se află: ', h('span', { class: 'gradient-text' }, p.name), '?'];
         quizPanel.append(head, h('h3', { style: { margin: '0 0 4px' } }, ...ask), h('div', { class: 'hint' }, 'Apasă pe punctul potrivit de pe hartă (apăsările în afara punctelor nu contează).'), h('div', { class: 'row', style: { marginTop: '8px' } }, skip));
       }
     }

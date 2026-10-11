@@ -1,6 +1,6 @@
 import { h } from '../core/dom.js';
 import { ic, srcTag } from '../core/ui.js';
-import { RO_UNITS, RO_GROUPS, RO_PEAKS } from '../data/relief.js';
+import { GENERAL, RO_UNITS, RO_GROUPS, RO_PEAKS } from '../data/relief.js';
 import { buildReliefPage } from './relief_page.js';
 
 // mic profil schematic depresiune/deal pentru Subcarpați
@@ -21,7 +21,7 @@ export default async function relieRomania(ctx = {}) {
   const cfg = {
     key: 'romania', assetName: 'terrain_romania', unitsAsset: 'units_romania', bordersAsset: 'borders_romania',
     units: RO_UNITS, groups: Object.entries(RO_GROUPS).map(([id, g]) => ({ id, name: g.name, color: g.color })), groupOf: (u) => ({ id: u.group, name: RO_GROUPS[u.group].name, color: RO_GROUPS[u.group].color }),
-    peaks: RO_PEAKS, filterTitle: 'Trepte de relief (filtru)', listTitle: 'Unitățile de relief ale României',
+    peaks: RO_PEAKS, extremes: GENERAL.roExtremes, filterTitle: 'Trepte de relief (filtru)', listTitle: 'Unitățile de relief ale României',
     emptyText: 'Apasă pe o unitate de relief (munți, dealuri, podișuri, câmpii) sau alege din listă. Poți trasa și un profil topografic între două puncte.',
     tools: ['profile'],
     profilePresets: [

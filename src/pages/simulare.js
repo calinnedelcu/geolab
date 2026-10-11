@@ -56,7 +56,8 @@ function genSec2() {
   // b) altitudine → munți ; c) munți → altitudine
   const mts = EU_UNITS.filter((u) => u.alt && u.alt.v > 500 && /^Munții/.test(u.name));
   pick(mts, 3).forEach((u) => { const it = mc(2, `Altitudinea maximă de ${num(u.alt.v)} m se întâlnește în:`, u.name, mts.map((x) => x.name), `${u.name}: ${num(u.alt.v)} m (${u.alt.where}).`); it && out.push(it); });
-  pick(mts, 2).forEach((u) => { const wrong = mts.filter((x) => x !== u).map((x) => `${num(x.alt.v)} m`); const it = mc(2, `Care este altitudinea maximă în ${u.name}?`, `${num(u.alt.v)} m`, wrong, `${u.name}: ${num(u.alt.v)} m (${u.alt.where}).`); it && out.push(it); });
+  const allAlt = EU_UNITS.filter((u) => u.alt && u.alt.v > 0);
+  pick(allAlt, 3).forEach((u) => { const wrong = allAlt.filter((x) => x !== u).map((x) => `${num(x.alt.v)} m`); const it = mc(2, `Care este altitudinea maximă în ${u.name}?`, `${num(u.alt.v)} m`, wrong, `${u.name}: ${num(u.alt.v)} m (${u.alt.where}).`); it && out.push(it); });
   return out;
 }
 
