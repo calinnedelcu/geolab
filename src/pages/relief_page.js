@@ -188,7 +188,7 @@ export async function buildReliefPage(cfg) {
     }
     function startPeakQuiz(mode) {
       if (!PK.length) return; if (state.tool) toggleTool(null); if (state.quiz) endQuiz(false); if (pq) endPQ(false);
-      pq = { mode, queue: fill30(PK.map((_, i) => i)), i: 0, ok: 0, bad: 0, locked: false };
+      pq = { mode, queue: fill30(PK.map((_, i) => i).filter((i) => mode === 'name' || !PK[i].unnamed)), i: 0, ok: 0, bad: 0, locked: false };
       select(0); rm.setFilter(null); applyFilter(); rm.noHover = true; rm.setLabelsVisible('unit', false); rm.setLabelsVisible('peak', false); rm.hideTip();
       if (mode !== 'alt') { rm.resetView(); PK.forEach((p, i) => rm.addLabel({ lon: p.lon, lat: p.lat, html: '', cls: 'peakdot', group: 'pdot', onClick: () => peakClick(i), z: 500 })); }
       showDock(true); nextPQ();

@@ -198,7 +198,7 @@ export const RO_PEAKS = [
   { name: 'Culmea Pleșu', alt: 911, lon: 26.81, lat: 46.81, note: 'Subcarpații Moldovei (poz. aprox.)' },
   { name: 'Dealul Ciungi', alt: 688, lon: 27.68, lat: 46.22, note: 'Podișul Moldovei (poz. aprox.)' },
   { name: 'Plaiul Galben', alt: 745, lon: 24.67, lat: 44.51, note: 'Podișul Getic (poz. aprox.)' },
-  { name: 'Deal fără nume în caiet', alt: 885, lon: 22.87, lat: 44.82, note: 'Podișul Mehedinți (nume ilizibil, poz. aprox.)' },
+  { name: 'Deal fără nume în caiet', unnamed: true, alt: 885, lon: 22.87, lat: 44.82, note: 'Podișul Mehedinți (nume ilizibil, poz. aprox.)' },
   { name: 'Dealul Bicheș', alt: 1080, lon: 24.65, lat: 46.19, note: 'Depresiunea Colinară a Transilvaniei (poz. aprox.)' },
   { name: 'Culmea Prelucă', alt: 795, lon: 21.88, lat: 45.87, note: 'Dealurile de Vest (poz. aprox.)' },
   { name: 'Câmpia Piteștilor', alt: 300, lon: 24.3, lat: 44.8, note: 'Câmpia Română (poz. aprox.)' },
