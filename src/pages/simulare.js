@@ -4,6 +4,7 @@ import * as store from '../core/store.js';
 import { EU_UNITS } from '../data/relief.js';
 import { ZONE_BY_KEY, TEST_ZONES } from '../data/clima.js';
 import { questionPool } from '../data/cards.js';
+import { CORE } from '../data/core_items.js';
 import { stats, climographSVG } from '../core/climo.js';
 
 // ------------------------------------------------------------------ Test de antrenament: întrebări cu variante, în stilul testului
@@ -29,7 +30,7 @@ const pick = (arr, n) => shuffle(arr.slice()).slice(0, n);
 
 function genSec1a(items) { // insulă / peninsulă / mare / golf / ocean după descriere
   const CAT = { insula: ['insula', 'insulele'], peninsula: ['peninsula'], mare: ['marea'], golf: ['golful'], ocean: ['oceanul'] };
-  const base = items.filter((x) => x.importance === 1 && CAT[x.cat]);
+  const base = items.filter((x) => CORE.has(x.id) && CAT[x.cat]);
   const out = [];
   shuffle(base.slice()).forEach((x) => {
     if (out.length >= 4) return;

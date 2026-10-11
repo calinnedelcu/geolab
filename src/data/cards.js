@@ -1,4 +1,5 @@
 // Carduri de memorare + banca de întrebări (generate din datele din caiete)
+import { CORE } from './core_items.js';
 import { EU_UNITS, RO_UNITS, PERIODS, PERIOD_BY_ID, GENERAL, RELIEF_TYPES, TERMS, EU_PEAKS, RO_PEAKS } from './relief.js';
 import { ZONES, MAIN_ZONES, FACTORS, WINDS, CENTERS, RO_CLIMATE, TEMPS, PRECIP, LAPSE, TEST_SHAPES } from './clima.js';
 
@@ -189,7 +190,7 @@ const CAT1 = { ocean: 'ocean', insula: 'insulă', peninsula: 'peninsulă', mare:
 const txt = (v) => (Array.isArray(v) ? v.join(', ') : v);
 export function buildBonusCards(items) {
   const C = [];
-  items.filter((x) => x.importance === 1).forEach((x) => {
+  items.filter((x) => CORE.has(x.id)).forEach((x) => {
     const where = [x.belongsTo && `în/la ${txt(x.belongsTo)}`, x.country && `țara: ${txt(x.country)}`].filter(Boolean).join(' · ');
     if (x.cat === 'stramtoare') C.push({ id: `ins-${x.id}`, deck: 'Insule, peninsule, mări, golfuri', q: `${x.name}: ce leagă?`, a: x.connects && x.connects.length ? x.connects.join(' ↔ ') + (x.country ? ` (${txt(x.country)})` : '') : (where || CAT1[x.cat]), topic: 'insule-mari', tag: CAT1[x.cat] });
     else C.push({ id: `ins-${x.id}`, deck: 'Insule, peninsule, mări, golfuri', q: `${x.name}: ce este și unde se află?`, a: `${CAT1[x.cat]}${where ? ' – ' + where : ''}${x.facts && x.facts[0] ? ' • ' + x.facts[0] : ''}`, topic: 'insule-mari', tag: CAT1[x.cat] });
@@ -197,7 +198,7 @@ export function buildBonusCards(items) {
   return C;
 }
 export function bonusQuestions(items) {
-  const Q = []; const base = items.filter((x) => x.importance === 1); const mc = (q, a, wrong, why) => Q.push({ topic: 'insule-mari', q, a, opts: shuf([a, ...pickN([...new Set(wrong.filter(Boolean))], 3, a)]), why });
+  const Q = []; const base = items.filter((x) => CORE.has(x.id)); const mc = (q, a, wrong, why) => Q.push({ topic: 'insule-mari', q, a, opts: shuf([a, ...pickN([...new Set(wrong.filter(Boolean))], 3, a)]), why });
   base.forEach((x) => {
     const where = txt(x.country || x.belongsTo); if (where) mc(`${x.name} – unde se află / cui aparține?`, where, base.filter((y) => y.cat === x.cat).map((y) => txt(y.country || y.belongsTo)), `${x.name}: ${where}.`);
     if (x.cat === 'stramtoare' && x.connects && x.connects.length >= 2) mc(`Ce leagă ${x.name}?`, x.connects.join(' ↔ '), base.filter((y) => y.connects && y.connects.length >= 2).map((y) => y.connects.join(' ↔ ')), `${x.name}: ${x.connects.join(' ↔ ')}.`);

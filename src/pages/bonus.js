@@ -2,6 +2,7 @@ import { h, svg, clear, clamp, fmt, shuffle, pick, norm, loadAsset } from '../co
 import { icon } from '../core/icons.js';
 import { ic, srcTag, callout, toggle, tabs, toast, confetti, beep, ring, chip } from '../core/ui.js';
 import * as store from '../core/store.js';
+import { CORE } from '../data/core_items.js';
 import { L, makeMap, homeControl, readoutControl, labelMarker, fmtLat, fmtLon, shieldOverlay } from '../map/lf.js';
 
 const CATS = {
@@ -26,8 +27,6 @@ function prepGeom(g) {
   return { polys, bbox: [x0, y0, x1, y1], bboxArea: (x1 - x0) * (y1 - y0) };
 }
 
-// varianta simplificată: doar cele mai cunoscute (≈ 60 din 100 de esențiale)
-const CORE = new Set('oceanul-arctic oceanul-atlantic marea-adriatica marea-alba marea-baltica marea-barents marea-caspica marea-egee marea-ionica marea-irlandei marea-mediterana marea-neagra marea-nordului marea-tireniana golful-biscaya golful-botnic golful-finlandei golful-genova golful-venetiei golful-salonic canalul-maniecii stramtoarea-gibraltar stramtoarea-bosfor stramtoarea-dardanele stramtoarea-messina stramtoarea-dover stramtoarea-oresund stramtoarea-kerci stramtoarea-otranto stramtoarea-bonifacio pen-balcanica pen-iberica pen-italica pen-scandinavica pen-iutlanda pen-crimeea pen-kola pen-peloponez pen-bretania britanice marea-britanie irlanda islanda sicilia sardinia corsica creta cipru malta baleare mallorca ciclade svalbard novaia-zemlea feroe zealand gotland azore madeira rodos corfu'.split(' '));
 export default async function insule() {
   const root = h('div', { class: 'mapage' }); root.style.setProperty('--ar', '1.1');
   const left = h('aside', { class: 'mp-side left' }), right = h('aside', { class: 'mp-side right' }), center = h('div', { class: 'mp-center' });
