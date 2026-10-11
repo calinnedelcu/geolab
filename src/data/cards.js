@@ -158,6 +158,40 @@ export function questionPool() {
   mc('zone-clima', 'Llanos și savana aparțin zonei:', 'Subecuatorială', ['Ecuatorială', 'Tropical uscat', 'Polar'], 'Subecuatorială.');
   mc('zone-clima', 'Taiga se întâlnește în zona:', 'Temperat continental („rece”)', ['Mediteraneană', 'Ecuatorială', 'Tropical uscat'], 'Taiga – continental rece.');
   mc('zone-clima', 'Amplitudine termică zilnică uriașă (zi 50–60 °C, noapte ≤ 15 °C):', 'Tropical uscat', ['Ecuatorială', 'Polar', 'Temperat oceanic'], 'Tropical uscat.');
+  // Tipuri de relief
+  const TR = 'tipuri-relief';
+  const COAST = ['fiorduri', 'țărm dalmatic', 'estuare', 'delte'];
+  mc(TR, 'Ce forme apar la relieful glaciar de calotă?', 'fiorduri și lacuri glaciare', ['circuri glaciare și văi glaciare', 'peșteri, doline și chei', 'dune de nisip'], 'Calotă: fiorduri, lacuri glaciare.');
+  mc(TR, 'Ce forme apar la relieful glaciar montan?', 'circuri glaciare și văi glaciare', ['fiorduri și lacuri glaciare', 'peșteri, doline și chei', 'estuare și delte'], 'Montan: circuri glaciare, văi glaciare (în U).');
+  mc(TR, 'Fiordurile (relief glaciar de calotă) sunt tipice pentru:', 'Norvegia', ['Spania', 'Grecia', 'România'], 'Fiorduri: Norvegia.');
+  mc(TR, 'Relief glaciar montan găsim în:', 'Alpi și Carpații Meridionali (Făgăraș, Retezat)', ['Câmpia Română', 'Delta Dunării', 'Podișul Moldovei'], 'Montan: Alpi, Făgăraș, Retezat.');
+  mc(TR, 'Ce forme are relieful carstic?', 'peșteri, doline, chei', ['fiorduri, lacuri glaciare', 'dune', 'delte, estuare'], 'Carst: peșteri, doline, chei.');
+  mc(TR, 'Unde domină relieful carstic în România?', 'Carpații Occidentali (calcare)', ['Carpații Meridionali', 'Câmpia de Vest', 'Delta Dunării'], 'Carstul domină în Occidentali (calcare).');
+  mc(TR, 'Care sunt vulcanii din România?', 'inactivi', ['activi', 'doar submarini', 'nu există vulcani'], 'România: vulcani inactivi.');
+  mc(TR, 'Exemplu de vulcan activ din Europa:', 'Etna', ['Mont Blanc', 'Moldoveanu', 'Galdhøpiggen'], 'Etna – vulcan activ.');
+  mc(TR, 'Lanțul vulcanic din vestul Carpaților Orientali este:', 'Călimani–Gurghiu–Harghita', ['Bucegi–Piatra Craiului', 'Rodna–Maramureș', 'Retezat–Godeanu'], 'Călimani–Gurghiu–Harghita.');
+  mc(TR, 'Vântul care depune nisip și formează dune creează relief:', 'eolian', ['glaciar', 'carstic', 'litoral'], 'Eolian: dune.');
+  mc(TR, 'Câmpiile cu dune sunt exemple de relief:', 'eolian', ['vulcanic', 'glaciar', 'carstic'], 'Câmpii cu dune – eolian.');
+  mc(TR, 'Sena, Tamisa și Elba sunt exemple de țărm cu:', 'estuare', COAST.filter((x) => x !== 'estuare'), 'Estuare: Sena, Tamisa, Elba.');
+  mc(TR, 'Dunărea, Padul, Ronul, Rinul și Tibrul sunt exemple de țărm cu:', 'delte', COAST.filter((x) => x !== 'delte'), 'Delte: Dunăre, Pad, Ron, Rin, Tibru.');
+  mc(TR, 'Țărmul dalmatic apare doar în:', 'zona Balcanică', ['Scandinavia', 'Insulele Britanice', 'Peninsula Iberică'], 'Dalmatic: zona Balcanică (Adriatica).');
+  mc(TR, 'Țărmul cu fiorduri aparține reliefului:', 'litoral (format de ghețari)', ['eolian', 'vulcanic', 'carstic'], 'Fiordurile sunt văi glaciare inundate de mare.');
+  TERMS.forEach((t) => mc(TR, `„${t.def}” este definiția pentru:`, t.term, [...TERMS.map((x) => x.term), 'Formă de relief'], `${t.term}: ${t.def}`));
+  // Europa vs. România (fișa generală)
+  const CMP = 'comparatie';
+  mc(CMP, 'Suprafața Europei este de aproximativ:', '10,18 milioane km²', ['8,5 milioane km²', '12,4 milioane km²', '6,3 milioane km²'], 'Europa ≈ 10,18 mil. km².');
+  mc(CMP, 'Populația Europei este de aproximativ:', '740 milioane locuitori', ['450 milioane locuitori', '1,1 miliarde locuitori', '320 milioane locuitori'], 'Europa ≈ 740 mil. loc.');
+  mc(CMP, 'Populația României este de aproximativ:', '19,7 milioane locuitori', ['14,2 milioane locuitori', '24,5 milioane locuitori', '9,8 milioane locuitori'], 'România ≈ 19,7 mil. loc.');
+  mc(CMP, 'Ce parte din suprafața Europei reprezintă România?', '≈ 2,3 %', ['≈ 7 %', '≈ 0,5 %', '≈ 12 %'], 'România ≈ 2,3 % din continent.');
+  mc(CMP, 'Cum arată treptele de relief ale României?', 'concentric, proporțional, armonios', ['asimetric, de la câmpie (N) spre lanțuri alpine (S)', 'doar munți', 'doar câmpii'], 'RO: concentric, proporțional.');
+  mc(CMP, 'Cum sunt treptele de relief ale Europei?', 'asimetric: altitudini crescătoare de la câmpie (N) spre lanțuri alpine (S)', ['concentric, proporțional', 'doar câmpii', 'uniform, fără munți'], 'Europa: asimetric.');
+  mc(CMP, 'Cum este poziția Europei față de Eurasia?', 'peninsulară, în vestul masei continentale', ['insulară, în estul continentului', 'centrală, fără mări', 'polară'], 'Europa – peninsulă vestică a Eurasiei.');
+  mc(CMP, 'Europa este, ca formă:', 'o peninsulă masivă, puternic articulată, cu mări interioare', ['un continent compact, fără mări interioare', 'un arhipelag', 'o câmpie uniformă'], 'Idee-cheie: peninsulă articulată.');
+  mc(CMP, 'România este, la nivelul continentului:', 'o țară de mărime medie', ['cea mai mare țară', 'o țară foarte mică', 'o țară insulară'], 'România – mărime medie.');
+  mc(CMP, 'Altitudinea medie a Europei este:', '300 m', ['450 m', '150 m', '800 m'], 'Europa 300 m; România 450 m.');
+  mc(CMP, 'Altitudinea minimă a Europei este:', '−28 m (Depresiunea Pericaspică)', ['0 m (Marea Nordului)', '−5 m (Țările de Jos)', '−100 m (Marea Neagră)'], 'Europa: −28 m, Pericaspica.');
+  mc(CMP, 'Altitudinea maximă a Europei (fără Caucaz) este:', 'Mont Blanc – 4810 m', ['Elbrus – 5642 m', 'Moldoveanu – 2544 m', 'Galdhøpiggen – 2469 m'], 'Mont Blanc 4810 m; cu Caucazul: Elbrus 5642 m.');
+  mc(CMP, 'Care este o zonă ostilă omului în Europa (relief)?', 'tundra arctică / etajul alpin-nival', ['Câmpia Padului', 'Riviera Mediteraneană', 'Podișul Bavariei'], 'Ostile: tundra arctică (permafrost), etajul alpin-nival (vânturi, ger).');
   // Climă
   mc('clima', 'Cu cât scade temperatura la fiecare 100 m altitudine?', '0,6 °C', ['0,2 °C', '1 °C', '1,5 °C'], '0,6 °C / 100 m.');
   mc('clima', 'Câtă precipitație în plus se înregistrează la 100 m altitudine (caiet)?', '100 mm', ['10 mm', '50 mm', '500 mm'], '100 mm / 100 m.');

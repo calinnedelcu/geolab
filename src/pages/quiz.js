@@ -8,6 +8,8 @@ const TOPICS = [
   { id: 'all', name: 'Amestecat (subiectele de test)', icon: 'shuffle', color: 'var(--accent)' },
   { id: 'relief-europe', name: 'Relief Europa', icon: 'globe', color: '#a66bff' },
   { id: 'relief-romania', name: 'Relief România', icon: 'mountain', color: '#e0524d' },
+  { id: 'tipuri-relief', name: 'Tipuri de relief', icon: 'cube', color: '#7cc7ff' },
+  { id: 'comparatie', name: 'Europa vs. România (fișa generală)', icon: 'layers', color: '#f0b429' },
   { id: 'zone-clima', name: 'Zone de climă (cele de la test)', icon: 'cloud', color: '#34a853' },
   { id: 'climograf', name: 'Fizionomia pp. pe grafice', icon: 'chart', color: '#ff7aa8' },
   { id: 'insule-mari', name: 'Insule, peninsule, mări, golfuri', icon: 'anchor', color: '#5eead4' },
