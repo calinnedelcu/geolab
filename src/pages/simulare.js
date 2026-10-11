@@ -28,26 +28,29 @@ function mc(sec, q, right, wrongPool, why, extra = {}) {
 }
 const pick = (arr, n) => shuffle(arr.slice()).slice(0, n);
 
-function genSec1a(items) { // insulă / peninsulă / mare / golf / ocean după descriere
-  const CAT = { insula: ['insula', 'insulele'], peninsula: ['peninsula'], mare: ['marea'], golf: ['golful'], ocean: ['oceanul'] };
-  const base = items.filter((x) => CORE.has(x.id) && CAT[x.cat]);
+function genSec1a(items) { // insulă / peninsulă / mare / golf / ocean după descriere – echilibrat pe categorii
+  const LBL = { insula: 'insula / arhipelagul', peninsula: 'peninsula', mare: 'marea', golf: 'golful', ocean: 'oceanul' };
+  const base = items.filter((x) => CORE.has(x.id) && LBL[x.cat]);
+  const strip = (n) => n.replace(/^(Insulele|Insula|Peninsula|Marea|Golful|Oceanul)\s+/i, '');
+  const byCat = {}; shuffle(base.slice()).forEach((x) => (byCat[x.cat] = byCat[x.cat] || []).push(x));
+  const order = shuffle(['insula', 'peninsula', 'mare', 'golf']).concat(shuffle(['insula', 'mare', 'peninsula', 'golf']));
   const out = [];
-  shuffle(base.slice()).forEach((x) => {
-    if (out.length >= 4) return;
-    const cands = (x.facts || []).filter((f) => !norm(f).includes(norm(x.name.replace(/^(Insulele|Insula|Peninsula|Marea|Golful|Oceanul)\s+/i, ''))));
-    if (!cands.length) return;
-    const same = base.filter((y) => y.cat === x.cat).map((y) => y.name);
-    const label = { insula: 'insula / arhipelagul', peninsula: 'peninsula', mare: 'marea', golf: 'golful', ocean: 'oceanul' }[x.cat];
-    const item = mc(1, `Numește ${label} descris(ă) astfel: „${cands[0]}”`, x.name, same, `${x.name}.`);
-    if (item) out.push(item);
-  });
+  for (const cat of order) {
+    if (out.length >= 6) break;
+    while (byCat[cat] && byCat[cat].length) {
+      const x = byCat[cat].shift(); const cands = (x.facts || []).filter((f) => !norm(f).includes(norm(strip(x.name))));
+      if (!cands.length) continue;
+      const it = mc(1, `Numește ${LBL[x.cat]} descris(ă) astfel: „${cands[0]}”`, x.name, base.filter((y) => y.cat === x.cat).map((y) => y.name), `${x.name}.`);
+      if (it) { out.push(it); break; }
+    }
+  }
   return out;
 }
 
 function genSec1b(pool) { return pick(pool.filter((q) => q.topic === 'relief-europe' && !/Fusul|Suprafața|punctul|Altitudinea medie|SĂ (SCADĂ|CREASCĂ)/.test(q.q)), 4).map((q) => ({ sec: 1, q: q.q, a: q.a, opts: q.opts, why: q.why })); }
 
 function parseRange(s) { const m = String(s).match(/(-?\d+)\s*[–-]\s*(-?\d+)/); return m ? [+m[1], +m[2]] : null; }
-function genSec2() {
+function genSec2(pool) {
   const out = [];
   // a) t.m.a. → ce climat
   const zs = TEST_ZONES.filter((z) => parseRange(z.tma));
@@ -58,13 +61,14 @@ function genSec2() {
   pick(mts, 3).forEach((u) => { const it = mc(2, `Altitudinea maximă de ${num(u.alt.v)} m se întâlnește în:`, u.name, mts.map((x) => x.name), `${u.name}: ${num(u.alt.v)} m (${u.alt.where}).`); it && out.push(it); });
   const allAlt = EU_UNITS.filter((u) => u.alt && u.alt.v > 0);
   pick(allAlt, 3).forEach((u) => { const wrong = allAlt.filter((x) => x !== u).map((x) => `${num(x.alt.v)} m`); const it = mc(2, `Care este altitudinea maximă în ${u.name}?`, `${num(u.alt.v)} m`, wrong, `${u.name}: ${num(u.alt.v)} m (${u.alt.where}).`); it && out.push(it); });
+  const germ = pool.filter((q) => /Germania|trecerea/i.test(q.q + q.a) && q.topic === 'zone-clima'); pick(germ, 1).forEach((q) => out.push({ sec: 2, q: q.q, a: q.a, opts: q.opts, why: q.why }));
   return out;
 }
 
 function genSec3(pool) { return pick(pool.filter((q) => q.topic === 'relief-romania'), 6).map((q) => ({ sec: 3, q: q.q, a: q.a, opts: q.opts, why: q.why })); }
 
 const r1 = (v) => Math.round(v * 10) / 10;
-function genSec4(stations) {
+function genSec4(stations, pool) {
   const test = new Set(TEST_ZONES.map((z) => z.key));
   const st4 = stations.filter((s) => test.has(s.zoneId) && s.lat > 0 && s.tempC && s.precipMm);
   const out = [];
@@ -75,10 +79,12 @@ function genSec4(stations) {
     const near = (v, d = [1.2, 2.4, 3.6, 4.8]) => shuffle([...new Set(d.flatMap((x) => [r1(v + x), r1(v - x)]).filter((x) => x !== v))]);
     const chart = { st: s };
     const a = mc(4, 'Care este temperatura medie din primăvară (martie–mai), citită din diagramă?', `${spring} °C`, near(spring).map((x) => `${x} °C`), `(${s.tempC[2]} + ${s.tempC[3]} + ${s.tempC[4]}) ÷ 3 = ${spring} °C.`, { chart });
+    const m = mc(4, 'Care este temperatura medie anuală (suma celor 12 medii lunare ÷ 12)?', `${S.mean} °C`, near(S.mean).map((x) => `${x} °C`), `Suma mediilor lunare ÷ 12 = ${S.mean} °C.`, { chart });
     const b = mc(4, 'Care este amplitudinea termică anuală (temperatura maximă − minimă)?', `${S.amp} °C`, near(S.amp, [1.5, 3, 4.5, 6]).map((x) => `${x} °C`), `${S.tMax} − (${S.tMin}) = ${S.amp} °C.`, { chart });
     const c = mc(4, 'Cărui climat îi corespunde diagrama?', ZONE_BY_KEY[s.zoneId].name, TEST_ZONES.map((z) => z.name), `Barele și linia corespund zonei ${ZONE_BY_KEY[s.zoneId].name}.`, { chart });
-    [a, b, c].forEach((x) => x && out.push(x));
+    [a, m, b, c].forEach((x) => x && out.push(x));
   });
+  pick(pool.filter((q) => q.topic === 'climograf' && /^Pe grafic|^Indiciu/.test(q.q)), 2).forEach((q) => out.push({ sec: 4, q: q.q, a: q.a, opts: q.opts, why: q.why }));
   return out;
 }
 
@@ -86,7 +92,7 @@ const SECTIONS = [
   [1, 'Subiectul 1 – Europa: insule, peninsule, mări, oceane și forme de relief', 'a) Numește insula / peninsula / marea / oceanul descris(ă).  b) Numește forma de relief.'],
   [2, 'Subiectul 2 – Climă și altitudini', 'a) t.m.a. → ce climat.  b) Altitudinea maximă de n m → în ce munți.  c) Altitudinea maximă din munții…'],
   [3, 'Subiectul 3 – România: forme de relief', 'Unde se află altitudinea / unitatea / resursa descrisă.'],
-  [4, 'Subiectul 4 – Diagramă cu temperaturi și precipitații', 'Temperatura medie din primăvară, amplitudinea, climatul.'],
+  [4, 'Subiectul 4 – Diagramă cu temperaturi și precipitații', 'Fizionomia precipitațiilor, amplitudinea, temperatura medie, climatul.'],
 ];
 
 export default async function simulare() {
@@ -99,7 +105,7 @@ export default async function simulare() {
 
   function build() {
     const pool = questionPool().filter((q) => !q.extra);
-    const all = [...genSec1a(items), ...genSec1b(pool), ...genSec2(), ...genSec3(pool), ...genSec4(stations)];
+    const all = [...genSec1a(items), ...genSec1b(pool), ...genSec2(pool), ...genSec3(pool), ...genSec4(stations, pool)];
     return all;
   }
 
