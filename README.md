@@ -22,9 +22,10 @@ Totul e construit în jurul listei „Test” din caiet:
 
 - **Ce intră la test** – lista bifabilă + „De verificat” (nepotriviri între caiete).
 - **Reliefuri** – Relief Europa (unități + „mașina timpului” P·C·H·A), Relief România (unități + profil topografic), Tipuri de relief, Europa vs. România.
-- **Clima** – Zone de climă (harta lumii, toate zonele de la ecuatorială la polară + trecerea prin Germania), Climograf (fizionomia precipitațiilor pe grafice, calculul amplitudinii și al temperaturii medii, „recunoaște zona”, desenează graficul), Clima Europei (factori, temperaturi, precipitații, vânturi, cicloni și anticicloni) și Clima României (influențe, Austru, Foehn, precipitații după altitudine).
+- **Clima** – Zone de climă (harta lumii; sunt evidențiate doar zonele de la test: mediteraneană, temperat oceanic, temperat continental, subpolar + trecerea prin Germania), Climograf (fizionomia precipitațiilor pe grafice, calculul amplitudinii și al temperaturii medii, „recunoaște zona”, desenează graficul), Clima Europei (factori, temperaturi, precipitații, vânturi, cicloni și anticicloni) și Clima României (influențe, Austru, Foehn, precipitații după altitudine).
 - **Insule, peninsule, mări, golfuri** – hartă, liste de învățat și quiz.
 - **Învață** – carduri cu repetiție spațiată (Leitner), quiz (normal / contra-timp / supraviețuire), glosar.
+- **Extra** – zonele de climă care nu sunt în lista de test (ecuatorială, subecuatorială, tropicale, polară) rămân pe hartă, estompate, și intră în carduri/quiz doar cu comutatorul „Include materia extra”.
 
 Etichetele de sursă din fișe: **U** = caietul tău, **C** = caietul colegului, **F** = fișele color, **X** = completat din cunoștințe generale.
 

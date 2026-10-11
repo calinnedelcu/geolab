@@ -60,7 +60,7 @@ export default async function home() {
   const STEPS = [
     ['1', 'Vezi ce intră la test', 'Lista ta: insule/mări, reliefuri, clima.', '/test', 'flag'],
     ['2', 'Reliefuri', 'Europa (30 de unități), România (17) și tipurile de relief.', '/relief-europa', 'mountain'],
-    ['3', 'Clima: zonele de climă', 'Toate zonele, de la ecuatorială la polară + Germania.', '/zone-clima', 'cloud'],
+    ['3', 'Clima: zonele de la test', 'Mediteraneană, oceanic, continental, subpolar + Germania.', '/zone-clima', 'cloud'],
     ['4', 'Climograf', 'Fizionomia precipitațiilor, amplitudine, temperatură medie.', '/climograf', 'chart'],
     ['5', 'Clima Europei și a României', 'Factori, vânturi, cicloni + influențele din România.', '/clima-europa', 'wind'],
     ['6', 'Insule, peninsule, mări, golfuri', 'Atlasul Europei cu hartă și quiz.', '/insule', 'anchor'],

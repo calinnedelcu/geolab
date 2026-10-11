@@ -18,7 +18,7 @@ export const EXAM = {
       { id: 'rel4', label: 'Fișa generală: Europa vs. România (cifre, extreme, altitudini)', links: [['Fișa', '#/comparatie']] },
     ] },
     { id: 'clima', title: 'Clima', icon: 'cloud', color: '#34a853', rows: [
-      { id: 'cl1', label: 'Zonele de climă: toate (ecuatorială, subecuatorială, tropical uscat și umed, mediteraneană, temperat oceanic și continental, subpolar, polară)', links: [['Harta zonelor', '#/zone-clima']] },
+      { id: 'cl1', label: 'Zonele de climă: temperat + rece → subpolar (mediteraneană, temperat oceanic, temperat continental, subpolar)', links: [['Harta zonelor', '#/zone-clima']] },
       { id: 'cl2', label: 'Trecerea temperat oceanic → temperat continental: Germania', links: [['Vezi pe hartă', '#/zone-clima?zona=tranzitie']] },
       { id: 'cl3', label: 'Fizionomia precipitațiilor pe grafice (cum arată barele în fiecare zonă)', links: [['Recunoaște zona', '#/climograf?tab=zona'], ['Galerie', '#/climograf?tab=galerie']] },
       { id: 'cl4', label: 'Grafic: de calculat amplitudinea și temperatura medie', links: [['Calculează', '#/climograf?tab=calc'], ['Desenează', '#/climograf?tab=draw']] },

@@ -62,7 +62,8 @@ export function buildCards() {
     add(`fzq-${t.key}`, 'Fizionomia pp. pe grafice', `Indiciu rapid pentru: ${t.title}`, t.clue, { topic: 'climograf' });
   });
   add('z-germ', 'Zone de climă', 'Ce țară face trecerea dintre temperat oceanic și temperat continental?', 'Germania', { topic: 'zone-clima' });
-  add('z-grupe', 'Zone de climă', 'Zonele de climă, pe grupe:', 'Caldă: ecuatorială, subecuatorială, tropical uscat, tropical umed (musonic) • Temperată: mediteraneană, temperat oceanic, temperat continental (trecere oceanic → continental: Germania) • Rece: subpolar, polar', { topic: 'zone-clima' });
+  add('z-grupe', 'Zone de climă', 'Zonele de climă de la test:', 'Temperat: mediteraneană, temperat oceanic, temperat continental (trecere oceanic → continental: Germania) • Rece: subpolar', { topic: 'zone-clima' });
+  add('z-grupe-extra', 'Zone de climă', 'Toate cele 9 zone, pe grupe (extra):', 'Caldă: ecuatorială, subecuatorială, tropical uscat, tropical umed • Temperată: mediteraneană, temperat oceanic, temperat continental • Rece: subpolar, polar', { topic: 'zone-clima', extra: true });
 
   // ---- Clima Europei / României
   add('c-rad', 'Clima Europei', 'Radiația solară: valori pe zone', '140–160 kcal/cm² (S) • 80–140 (temperată) • sub 80 (rece). Bilanțul radiativ scade S→N.', { topic: 'clima' });
