@@ -1,7 +1,9 @@
-import { h, clear, shuffle, loadAsset } from '../core/dom.js';
+import { h, svg, clear, shuffle, loadAsset } from '../core/dom.js';
+import { createMap2D } from '../core/map2d.js';
+import { UNIT_POINTS } from '../data/unit_points.js';
 import { ic, pageHead, ring, confetti, beep } from '../core/ui.js';
 import * as store from '../core/store.js';
-import { EU_UNITS } from '../data/relief.js';
+import { EU_UNITS, RO_UNITS } from '../data/relief.js';
 import { ZONE_BY_KEY, TEST_ZONES } from '../data/clima.js';
 import { questionPool } from '../data/cards.js';
 import { CORE } from '../data/core_items.js';
@@ -14,6 +16,8 @@ const css = `
 .sim-q .opt{justify-content:flex-start;text-align:left;white-space:normal;font-weight:600}
 .sim-q .opt .lt{min-width:22px;display:inline-grid;place-items:center;font-weight:800;color:var(--faint)}
 .sim-sec h2{margin:34px 0 4px}
+.sim-map{margin:14px 0 4px;padding:12px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}
+.sim-map .hint{margin-top:6px}
 .sim-chart{max-width:640px;margin:10px 0 12px;padding:10px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
 `;
 
@@ -21,7 +25,7 @@ const norm = (s) => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,
 const num = (v) => String(v).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
 // 4 variante: răspunsul corect + 3 greșite (unice); null dacă nu ajung
-function mc(sec, q, right, wrongPool, why, extra = {}) {
+function mc(sec, q, right, wrongPool, why, extra = {}) { // eslint-disable-line
   const wrong = shuffle([...new Set(wrongPool.filter((x) => x != null && x !== '' && String(x) !== String(right)))]).slice(0, 3);
   if (wrong.length < 3) return null;
   return { sec, q, a: right, opts: shuffle([right, ...wrong]), why, ...extra };
@@ -88,6 +92,55 @@ function genSec4(stations, pool) {
   return out;
 }
 
+
+// ------------------------------------------------------------------ întrebări pe hartă (cifre / litere pe hartă, răspuns cu variante)
+const EU_BOX = { lon0: -24, lon1: 66, lat0: 34, lat1: 71.5 };
+function genMapEuItems(items) {
+  const LBL = { insula: 'insula / arhipelagul', peninsula: 'peninsula', mare: 'marea', golf: 'golful' };
+  const ok = items.filter((x) => CORE.has(x.id) && LBL[x.cat] && x.lonLat && x.lonLat[0] > EU_BOX.lon0 && x.lonLat[0] < EU_BOX.lon1 && x.lonLat[1] > EU_BOX.lat0 && x.lonLat[1] < EU_BOX.lat1);
+  const chosen = [];
+  shuffle(['insula', 'peninsula', 'mare', 'golf']).forEach((c) => { const x = pick(ok.filter((y) => y.cat === c && !chosen.includes(y)), 1)[0]; x && chosen.push(x); });
+  if (chosen.length < 4) return [];
+  const block = { kind: 'eu', title: 'Harta Europei – numește elementele marcate cu cifre', markers: chosen.map((x, i) => ({ label: String(i + 1), lon: x.lonLat[0], lat: x.lonLat[1] })) };
+  return chosen.map((x, i) => mc(1, `Numește ${LBL[x.cat]} marcat(ă) cu cifra ${i + 1} pe hartă.`, x.name, ok.filter((y) => y.cat === x.cat).map((y) => y.name), `${x.name}.`, { block })).filter(Boolean);
+}
+function unitMarkers(units, ptsKey, ids) { return ids.map((u, i) => ({ label: 'abcd'[i], geomId: u.id, key: ptsKey, lon: UNIT_POINTS[ptsKey][u.id][0], lat: UNIT_POINTS[ptsKey][u.id][1] })); }
+function genMapEuUnits() {
+  const units = pick(EU_UNITS.filter((u) => UNIT_POINTS.eu[u.id]), 4); if (units.length < 4) return [];
+  const block = { kind: 'eu', units: true, title: 'Harta Europei – numește formele de relief marcate cu litere', markers: unitMarkers(EU_UNITS, 'eu', units) };
+  return units.map((u, i) => mc(1, `Numește forma de relief marcată cu litera ${'abcd'[i]} pe hartă.`, u.name, EU_UNITS.map((x) => x.name), `${u.name}.`, { block })).filter(Boolean);
+}
+function genMapRo() {
+  const units = pick(RO_UNITS.filter((u) => u.alt && u.alt.v > 0 && UNIT_POINTS.ro[u.id]), 4); if (units.length < 4) return [];
+  const block = { kind: 'ro', units: true, title: 'Harta României – unități de relief marcate cu litere', markers: unitMarkers(RO_UNITS, 'ro', units) };
+  const letters = (i) => ['a', 'b', 'c', 'd'].map((l) => `Zona ${l}`);
+  const mk = (q, i, why) => { const o = letters(); return { sec: 3, q, a: o[i], opts: o, why, block }; };
+  const idx = shuffle([0, 1, 2, 3]);
+  const out = [];
+  idx.slice(0, 2).forEach((i) => out.push(mk(`Pe harta României: unde se află altitudinea maximă de ${num(units[i].alt.v)} m?`, i, `${num(units[i].alt.v)} m – ${units[i].alt.where} (${units[i].name}).`)));
+  idx.slice(2).forEach((i) => out.push(mk(`Pe harta României: unde se află ${units[i].name}?`, i, `${units[i].name} este în zona ${'abcd'[i]}.`)));
+  return out;
+}
+
+async function drawBlock(block, host) {
+  const kind = block.kind === 'ro' ? 'romania' : 'europe';
+  const map = await createMap2D(kind, { vw: 1000 });
+  if (block.units) {
+    const geo = await loadAsset(kind === 'europe' ? 'units_europe' : 'units_romania');
+    block.markers.forEach((m) => {
+      const g = geo[m.geomId]; if (!g) return; const polys = g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
+      const d = polys.map((p) => p.map((ring) => ring.map(([lo, la], i) => { const [x, y] = map.project(lo, la); return `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`; }).join('') + 'Z').join('')).join('');
+      map.gTop.append(svg('path', { d, fill: 'rgba(255,211,122,.22)', stroke: '#ffd37a', 'stroke-width': 2.2, 'fill-rule': 'evenodd', 'vector-effect': 'non-scaling-stroke' }));
+    });
+  }
+  block.markers.forEach((m) => {
+    const [x, y] = map.project(m.lon, m.lat);
+    map.gTop.append(svg('circle', { cx: x, cy: y, r: block.units ? 17 : 14, fill: block.units ? '#0b1020' : '#ffd37a', stroke: block.units ? '#ffd37a' : '#0b1020', 'stroke-width': 2.6 }),
+      svg('text', { x, y: y + 6.5, 'text-anchor': 'middle', 'font-size': 20, 'font-weight': 800, fill: block.units ? '#ffd37a' : '#0b1020', style: { fontFamily: 'system-ui, sans-serif' } }, m.label));
+  });
+  clear(host); host.append(map.el);
+}
+
 const SECTIONS = [
   [1, 'Subiectul 1 – Europa: insule, peninsule, mări, oceane și forme de relief', 'a) Numește insula / peninsula / marea / oceanul descris(ă).  b) Numește forma de relief.'],
   [2, 'Subiectul 2 – Climă și altitudini', 'a) t.m.a. → ce climat.  b) Altitudinea maximă de n m → în ce munți.  c) Altitudinea maximă din munții…'],
@@ -105,7 +158,7 @@ export default async function simulare() {
 
   function build() {
     const pool = questionPool().filter((q) => !q.extra);
-    const all = [...genSec1a(items), ...genSec1b(pool), ...genSec2(pool), ...genSec3(pool), ...genSec4(stations, pool)];
+    const all = [...genSec1a(items), ...genMapEuItems(items), ...genSec1b(pool), ...genMapEuUnits(), ...genSec2(pool), ...genMapRo(), ...genSec3(pool), ...genSec4(stations, pool)];
     return all;
   }
 
@@ -114,14 +167,15 @@ export default async function simulare() {
     SECTIONS.forEach(([sec, title, hint]) => {
       const list = qs.filter((q) => q.sec === sec); if (!list.length) return;
       const box = h('section', { class: 'sim-sec' }, h('h2', null, title), h('div', { class: 'hint' }, hint));
-      let lastChart = null;
+      const shown = new Set();
       list.forEach((q) => {
+        if (q.block && !shown.has(q.block)) { shown.add(q.block); const host = h('div', { style: { minHeight: '240px', display: 'grid', placeItems: 'center' } }, h('div', { class: 'spinner' })); box.append(h('div', { class: 'sim-map' }, h('div', { style: { fontWeight: 750, marginBottom: '8px' } }, q.block.title), host, h('div', { class: 'hint' }, 'Poți trage harta și mări (dublu-click).'))); drawBlock(q.block, host).catch(() => { clear(host); host.append(h('div', { class: 'hint' }, 'Harta nu s-a putut încărca.')); }); }
         const n = qs.indexOf(q) + 1; const card = h('div', { class: 'card sim-q' }); const btns = [];
         card.append(h('div', { style: { fontWeight: 750, marginBottom: '8px' } }, `${n}. ${q.q}`));
         if (q.chart) card.append(h('div', { class: 'sim-chart' }, climographSVG(q.chart.st, { hideName: true, title: 'Diagramă', subtitle: 'temperaturi (linie) și precipitații (bare)', showValues: false })));
         const grid = h('div', { class: 'stack', style: { gap: '8px' } });
         q.opts.forEach((o, i) => { const b = h('button', { class: 'btn opt', onclick: () => { if (done) return; answers.set(q, o); btns.forEach((x) => x.classList.toggle('sel', x === b)); upd(); } }, h('span', { class: 'lt' }, 'abcd'[i]), o); b.dataset.v = o; btns.push(b); grid.append(b); });
-        card.append(grid); nodes.push({ q, card, btns }); box.append(card); void lastChart;
+        card.append(grid); nodes.push({ q, card, btns }); box.append(card);
       });
       body.append(box);
     });
