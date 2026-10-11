@@ -5,10 +5,10 @@ import { questionPool, bonusQuestions } from '../data/cards.js';
 import { toggle } from '../core/ui.js';
 
 const TOPICS = [
-  { id: 'all', name: 'Amestecat (subiectele de test)', icon: 'shuffle', color: 'var(--accent)' },
+  { id: 'all', name: 'Amestecat (toate subiectele)', icon: 'shuffle', color: 'var(--accent)' },
   { id: 'relief-europe', name: 'Relief Europa', icon: 'globe', color: '#a66bff' },
   { id: 'relief-romania', name: 'Relief România', icon: 'mountain', color: '#e0524d' },
-  { id: 'zone-clima', name: 'Zone de climă (cele de la test)', icon: 'cloud', color: '#34a853' },
+  { id: 'zone-clima', name: 'Zone de climă', icon: 'cloud', color: '#34a853' },
   { id: 'climograf', name: 'Fizionomia pp. pe grafice', icon: 'chart', color: '#ff7aa8' },
   { id: 'insule-mari', name: 'Insule, peninsule, mări, golfuri', icon: 'anchor', color: '#5eead4' },
   { id: 'clima', name: 'Clima Europei & României', icon: 'wind', color: '#4aa3df' },
@@ -30,7 +30,7 @@ export default async function quiz() {
     draw();
     const nSel = h('div', { class: 'chips' }, [10, 15, 25, 40].map((v) => h('button', { class: `chip ${v === n ? 'active' : ''}`, onclick: (e) => { n = v; [...nSel.children].forEach((c) => c.classList.remove('active')); e.currentTarget.classList.add('active'); } }, `${v} întrebări`)));
     const modes = tabs([{ id: 'normal', label: 'Normal' }, { id: 'timed', label: 'Contra-timp (20 s)' }, { id: 'survival', label: 'Supraviețuire (3 vieți)' }], 'normal', (v) => { mode = v; });
-    body.append(h('div', { class: 'row', style: { marginBottom: '12px' } }, toggle('Include și materia extra (zonele ecuatorială, tropicale, polară)', extra, (v) => { extra = v; draw(); }), h('span', { class: 'hint' }, 'Implicit: doar ce intră la test.')), topicCards, h('div', { class: 'card', style: { marginTop: '16px' } }, h('div', { class: 'grid c2' }, h('div', { class: 'field' }, h('label', null, 'Număr de întrebări'), nSel), h('div', { class: 'field' }, h('label', null, 'Mod'), modes)), h('div', { class: 'row', style: { marginTop: '16px' } }, h('button', { class: 'btn primary', onclick: () => start(topic, n, mode) }, ic('play'), 'Începe quiz-ul'), h('span', { class: 'hint' }, 'Poți răspunde și de la tastatură: 1–4'))));
+    body.append(h('div', { class: 'row', style: { marginBottom: '12px' } }, pool.some((q) => q.extra) ? toggle('Include și materia extra', extra, (v) => { extra = v; draw(); }) : null), topicCards, h('div', { class: 'card', style: { marginTop: '16px' } }, h('div', { class: 'grid c2' }, h('div', { class: 'field' }, h('label', null, 'Număr de întrebări'), nSel), h('div', { class: 'field' }, h('label', null, 'Mod'), modes)), h('div', { class: 'row', style: { marginTop: '16px' } }, h('button', { class: 'btn primary', onclick: () => start(topic, n, mode) }, ic('play'), 'Începe quiz-ul'), h('span', { class: 'hint' }, 'Poți răspunde și de la tastatură: 1–4'))));
     const hist = store.get().quizHistory.slice(-6).reverse();
     if (hist.length) body.append(h('h2', { style: { marginTop: '26px' } }, 'Ultimele rezultate'), h('div', { class: 'table-wrap' }, h('table', { class: 'table' }, h('thead', null, h('tr', null, ['Subiect', 'Mod', 'Scor', 'Procent'].map((x) => h('th', null, x)))), h('tbody', null, hist.map((r) => h('tr', null, h('td', null, r.topic), h('td', null, r.mode), h('td', null, `${r.ok}/${r.n}`), h('td', null, `${r.pct}%`)))))));
   }
