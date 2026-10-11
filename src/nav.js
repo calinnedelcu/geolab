@@ -22,6 +22,7 @@ export const NAV = [
     { path: '/insule', label: 'Atlasul Europei (hartă + quiz)', icon: 'anchor' },
   ] },
   { title: 'Învață', items: [
+    { path: '/simulare', label: 'Test de antrenament', icon: 'target' },
     { path: '/carduri', label: 'Carduri (repetiție)', icon: 'cards' },
     { path: '/quiz', label: 'Quiz', icon: 'help' },
     { path: '/glosar', label: 'Glosar', icon: 'book' },
@@ -40,6 +41,7 @@ export const PAGES = {
   '/climograf': { title: 'Climograf', sub: 'Amplitudine · t medie · fizionomia precipitațiilor', load: () => import('./pages/climograf.js') },
   '/insule': { title: 'Insule, peninsule, mări, golfuri', sub: 'Atlasul Europei – pentru test', load: () => import('./pages/bonus.js'), stage: true },
   '/bonus': { title: 'Insule, peninsule, mări, golfuri', sub: 'Atlasul Europei – pentru test', load: () => import('./pages/bonus.js'), stage: true },
+  '/simulare': { title: 'Test de antrenament', sub: 'Întrebări cu variante, ca la clasă', load: () => import('./pages/simulare.js') },
   '/carduri': { title: 'Carduri', sub: 'Repetiție spațiată (Leitner)', load: () => import('./pages/carduri.js') },
   '/quiz': { title: 'Quiz', sub: 'Întrebări din caiete', load: () => import('./pages/quiz.js') },
   '/glosar': { title: 'Glosar', sub: 'Termenii din caiete', load: () => import('./pages/test_info.js').then((m) => ({ default: m.glosar })) },
